@@ -42,7 +42,7 @@ class AnnoyPrebuilt;
  *
  * Instances of this class are usually constructed using `AnnoyPrebuilt::initialize()`.
  *
- * @tparam Distance_ An **Annoy**-derived class to compute the distance between vectors.
+ * @tparam Distance_ An **Annoy** class to compute the distance between vectors, e.g., `Annoy::Euclidean`.
  * @tparam Dim_ Integer type for the number of dimensions.
  * @tparam Index_ Integer type for the indices.
  * @tparam Float_ Floating point type for the query data and output distances.
@@ -214,7 +214,7 @@ public:
  * Instances of this class are usually constructed using `AnnoyBuilder::build_raw()`.
  * The `initialize()` method will create an instance of the `AnnoySearcher` class.
  *
- * @tparam Distance_ An **Annoy**-derived class to compute the distance between vectors.
+ * @tparam Distance_ An **Annoy** class to compute the distance between vectors, e.g., `Annoy::Euclidean`.
  * @tparam Dim_ Integer type for the number of dimensions.
  * For the output of `AnnoyBuilder::build_raw()`, this is set to `Matrix_::dimension_type`.
  * @tparam Index_ Integer type for the indices.
@@ -297,7 +297,7 @@ public:
  * Annoy.
  * https://github.com/spotify/annoy
  *
- * @tparam Distance_ An **Annoy**-derived class to compute the distance between vectors.
+ * @tparam Distance_ An **Annoy** class to compute the distance between vectors, e.g., `Annoy::Euclidean`, `Annoy::Manhattan`.
  * Note that this is not the same as `knncolle::MockDistance`.
  * @tparam Matrix_ Matrix-like object satisfying the `knncolle::MockMatrix` interface.
  * @tparam Float_ Floating point type for the query data and output distances.
@@ -305,7 +305,12 @@ public:
  * @tparam InternalData_ Floating point type for the internal data in Annoy.
  * This defaults to a `float` instead of a `double` to sacrifice some accuracy for performance.
  */
-template<class Distance_, class Matrix_ = knncolle::SimpleMatrix<int, int, double>, typename Float_ = double, typename InternalIndex_ = typename Matrix_::index_type, typename InternalData_ = float>
+template<
+    class Distance_ = Annoy::Euclidean,
+    class Matrix_ = knncolle::SimpleMatrix<int, int, double>, 
+    typename Float_ = double, 
+    typename InternalIndex_ = typename Matrix_::index_type, 
+    typename InternalData_ = float>
 class AnnoyBuilder : public knncolle::Builder<Matrix_, Float_> {
 private:
     AnnoyOptions my_options;

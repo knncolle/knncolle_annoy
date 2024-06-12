@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 
 project(knncolle_annoy
     VERSION 0.1.0
-    DESCRIPTION "Annoy bindings for the knncolle library"
+    DESCRIPTION "knncolle bindings for Annoy"
     LANGUAGES CXX)
 
 include(GNUInstallDirs)
