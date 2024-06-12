@@ -39,28 +39,28 @@ protected:
     }
 
 protected:
+    static void sanity_checks(const std::vector<int>& indices, const std::vector<double>& distances) {
+        EXPECT_TRUE(std::is_sorted(distances.begin(), distances.end())); // sorted by increasing distance.
+
+        auto sorted = indices;
+        std::sort(sorted.begin(), sorted.end());
+        EXPECT_TRUE(std::adjacent_find(sorted.begin(), sorted.end()) == sorted.end()); // all neighbors are unique.
+    }
+
+    static void sanity_checks(const std::vector<int>& indices, const std::vector<double>& distances, int k, int self) { // for finding by index
+        EXPECT_EQ(indices.size(), distances.size());
+        EXPECT_EQ(indices.size(), std::min(k, nobs - 1));
+
+        for (const auto& ix : indices) { // self is not in there.
+            EXPECT_TRUE(ix != self);
+        }
+
+        sanity_checks(indices, distances);
+    }
+
+protected:
     void SetUp() {
         assemble(std::get<0>(GetParam()));
-    }
-
-    static void sanity_checks(const std::vector<std::pair<int, double> >& results) {
-        for (size_t i = 1; i < results.size(); ++i) { // sorted by increasing distance.
-            EXPECT_TRUE(results[i].second >= results[i-1].second);
-        }
-
-        auto sorted = results;
-        std::sort(sorted.begin(), sorted.end());
-        for (size_t i = 1; i < sorted.size(); ++i) { // all neighbors are unique.
-            EXPECT_TRUE(sorted[i].first >= sorted[i-1].first);
-        }
-    }
-
-    static void sanity_checks(const std::vector<std::pair<int, double> >& results, int k, int index) { // for finding by index
-        EXPECT_EQ(results.size(), std::min(k, nobs - 1));
-        for (const auto& res : results) { // self is not in there.
-            EXPECT_TRUE(res.first != index);
-        }
-        sanity_checks(results);
     }
 };
 
@@ -72,10 +72,41 @@ TEST_P(AnnoyTest, FindEuclidean) {
     auto bptr = builder.build_unique(mat);
     auto bsptr = bptr->initialize();
 
-    std::vector<std::pair<int, double> > results;
+    // Trying with a different type.
+    knncolle::SimpleMatrix<int, size_t, double> mat2(ndim, nobs, data.data());
+    knncolle_annoy::AnnoyBuilder<Annoy::Euclidean, decltype(mat2), float, int, float> builder2;
+    auto bptr2 = builder2.build_unique(mat2);
+    auto bsptr2 = bptr2->initialize();
+
+    std::vector<int> ires, ires0;
+    std::vector<size_t> ires2, ires20;
+    std::vector<double> dres, dres0;
+    std::vector<float> dres2, dres20;
+
     for (int x = 0; x < nobs; ++x) {
-        bsptr->search(x, k, results);
-        sanity_checks(results, k, x);
+        bsptr->search(x, k, &ires, &dres);
+        sanity_checks(ires, dres, k, x);
+
+        // Checking that NULLs work.
+        bsptr->search(x, k, NULL, &dres0);
+        EXPECT_EQ(dres, dres0);
+        bsptr->search(x, k, &ires0, NULL);
+        EXPECT_EQ(ires, ires0);
+
+        // Checking the different types.
+        bsptr2->search(x, k, &ires2, &dres2);
+        EXPECT_EQ(ires.size(), ires2.size());
+        EXPECT_EQ(ires.size(), dres2.size());
+
+        for (size_t j = 0; j < ires.size(); ++j) {
+            EXPECT_EQ(ires[j], ires2[j]);
+            EXPECT_FLOAT_EQ(dres[j], dres2[j]);
+        }
+
+        bsptr2->search(x, k, NULL, &dres20);
+        EXPECT_EQ(dres2, dres20);
+        bsptr2->search(x, k, &ires20, NULL);
+        EXPECT_EQ(ires2, ires20);
     }
 }
 
@@ -87,10 +118,11 @@ TEST_P(AnnoyTest, FindManhattan) {
     auto bptr = builder.build_unique(mat);
     auto bsptr = bptr->initialize();
 
-    std::vector<std::pair<int, double> > results;
+    std::vector<int> ires;
+    std::vector<double> dres;
     for (int x = 0; x < nobs; ++x) {
-        bsptr->search(x, k, results);
-        sanity_checks(results, k, x);
+        bsptr->search(x, k, &ires, &dres);
+        sanity_checks(ires, dres, k, x);
     }
 }
 
@@ -98,18 +130,54 @@ TEST_P(AnnoyTest, QueryEuclidean) {
     int k = std::get<1>(GetParam());    
 
     knncolle::SimpleMatrix mat(ndim, nobs, data.data());
-    knncolle_annoy::AnnoyBuilder<Annoy::Manhattan> builder;
+    knncolle_annoy::AnnoyBuilder<Annoy::Euclidean> builder;
     auto bptr = builder.build_unique(mat);
     auto bsptr = bptr->initialize();
 
+    // Trying with a different type.
+    knncolle::SimpleMatrix<int, size_t, double> mat2(ndim, nobs, data.data());
+    knncolle_annoy::AnnoyBuilder<Annoy::Euclidean, decltype(mat2), float, int, float> builder2;
+    auto bptr2 = builder2.build_unique(mat2);
+    auto bsptr2 = bptr2->initialize();
+
+    std::vector<int> ires, ires0;
+    std::vector<size_t> ires2, ires20;
+    std::vector<double> dres, dres0;
+    std::vector<float> dres2, dres20;
+
     std::mt19937_64 rng(ndim * 10 + nobs - k);
-    std::vector<std::pair<int, double> > results;
     std::vector<double> query(ndim);
+    std::vector<float> fquery(ndim);
+
     for (int x = 0; x < nobs; ++x) {
         fill_random(query.begin(), query.end(), rng);
-        bsptr->search(data.data() + x * ndim, k, results);
-        EXPECT_EQ(results.size(), std::min(k, nobs));
-        sanity_checks(results);
+
+        bsptr->search(query.data(), k, &ires, &dres);
+        EXPECT_EQ(ires.size(), std::min(k, nobs));
+        EXPECT_EQ(ires.size(), dres.size());
+        sanity_checks(ires, dres);
+
+        // Checking that NULLs work.
+        bsptr->search(query.data(), k, NULL, &dres0);
+        EXPECT_EQ(dres, dres0);
+        bsptr->search(query.data(), k, &ires0, NULL);
+        EXPECT_EQ(ires, ires0);
+
+        // Checking the different types.
+        std::copy(query.begin(), query.end(), fquery.begin());
+        bsptr2->search(fquery.data(), k, &ires2, &dres2);
+        EXPECT_EQ(ires.size(), ires2.size());
+        EXPECT_EQ(ires.size(), dres2.size());
+
+        for (size_t j = 0; j < ires.size(); ++j) {
+            EXPECT_EQ(ires[j], ires2[j]);
+            EXPECT_FLOAT_EQ(dres[j], dres2[j]);
+        }
+
+        bsptr2->search(fquery.data(), k, NULL, &dres20);
+        EXPECT_EQ(dres2, dres20);
+        bsptr2->search(fquery.data(), k, &ires20, NULL);
+        EXPECT_EQ(ires2, ires20);
     }
 }
 
