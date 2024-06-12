@@ -13,7 +13,7 @@ For most applications involving large datasets, this is an acceptable trade-off.
 
 ## Quick start
 
-The various `Annoy*` classes work directly the code chunks in the [**knncolle**](https://github.com/knncolle/knncolle) documentation. 
+Instances of the various `knncolle_annoy::Annoy*` classes can be used anywhere that accepts the corresponding **knncolle** interface.
 For example:
 
 ```cpp
@@ -22,15 +22,28 @@ For example:
 // Wrap our data in a light SimpleMatrix.
 knncolle::SimpleMatrix<int, int, double> mat(ndim, nobs, matrix.data());
 
-// Build a VP-tree index. 
-knncolle_annoy::AnnoyBuilder<> an_builder;
-auto an_index = an_builder.build(mat);
+// Build an Annoy index. 
+knncolle_annoy::AnnoyBuilder<Annoy::Euclidean> an_builder;
+auto an_index = an_builder.build_unique(mat);
 
-// Find 10 nearest neighbors of every element.
-auto results = knncolle::find_nearest_neighbors(*anp_index, 10); 
+// Find 10 (approximate) nearest neighbors of every element.
+auto results = knncolle::find_nearest_neighbors(*an_index, 10); 
 ```
 
-We can also customize the construction of the `AnnoyBuilder`:
+We could alternate between exact and approximate searches at run-time:
+
+```cpp
+std::unique_ptr<knncolle::Prebuilt<int, int, double> > ptr;
+if (use_exact) {
+    knncolle::KmknnBuilder<> kbuilder;
+    ptr = kbuilder.build_unique(mat);
+} else {
+    knncolle::AnnoyBuilder<> abuilder;
+    ptr = abuilder.build_unique(mat);
+}
+```
+
+We can also customize the construction of the `AnnoyBuilder` by passing in options:
 
 ```cpp
 knncolle_annoy::AnnoyOptions an_opts;
