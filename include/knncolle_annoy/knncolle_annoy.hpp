@@ -82,6 +82,30 @@ public:
      */
 
 private:
+    auto obtain_pointers(std::vector<Index_>* output_indices, std::vector<Float_>* output_distances, Index_ k) {
+        std::vector<InternalIndex_>* icopy_ptr = &my_indices;
+        if (output_indices) {
+            if constexpr(same_internal_index) {
+                icopy_ptr = output_indices;
+            }
+        }
+        icopy_ptr->clear();
+        icopy_ptr->reserve(k);
+
+        std::vector<InternalData_>* dcopy_ptr = NULL;
+        if (output_distances) {
+            if constexpr(same_internal_data) {
+                dcopy_ptr = output_distances;
+            } else {
+                dcopy_ptr = &my_distances;
+            }
+            dcopy_ptr->clear();
+            dcopy_ptr->reserve(k);
+        }
+
+        return std::make_pair(icopy_ptr, dcopy_ptr);
+    }
+
     template<typename Type_>
     static void remove_self(std::vector<Type_>& vec, size_t at) {
         if (at < vec.size()) {
@@ -114,26 +138,9 @@ private:
 public:
     void search(Index_ i, Index_ k, std::vector<Index_>* output_indices, std::vector<Float_>* output_distances) {
         Index_ kp1 = k + 1; // +1, as it forgets to discard 'self'.
-
-        std::vector<InternalIndex_>* icopy_ptr = &my_indices;
-        if (output_indices) {
-            if constexpr(same_internal_index) {
-                icopy_ptr = output_indices;
-            }
-        }
-        icopy_ptr->clear();
-        icopy_ptr->reserve(kp1);
-
-        std::vector<InternalData_>* dcopy_ptr = NULL;
-        if (output_distances) {
-            if constexpr(same_internal_data) {
-                dcopy_ptr = output_distances;
-            } else {
-                dcopy_ptr = &my_distances;
-            }
-            dcopy_ptr->clear();
-            dcopy_ptr->reserve(kp1);
-        }
+        auto ptrs = obtain_pointers(output_indices, output_distances, kp1);
+        auto icopy_ptr = ptrs.first;
+        auto dcopy_ptr = ptrs.second;
 
         my_parent->my_index.get_nns_by_item(i, kp1, get_search_k(kp1), icopy_ptr, dcopy_ptr);
 
@@ -169,25 +176,9 @@ public:
 
 private:
     void search_raw(const InternalData_* query, Index_ k, std::vector<Index_>* output_indices, std::vector<Float_>* output_distances) {
-        std::vector<InternalIndex_>* icopy_ptr = &my_indices;
-        if (output_indices) {
-            if constexpr(same_internal_index) {
-                icopy_ptr = output_indices;
-            }
-        }
-        icopy_ptr->clear();
-        icopy_ptr->reserve(k);
-
-        std::vector<InternalData_>* dcopy_ptr = NULL;
-        if (output_distances) {
-            if constexpr(same_internal_data) {
-                dcopy_ptr = output_distances;
-            } else {
-                dcopy_ptr = &my_distances;
-            }
-            dcopy_ptr->clear();
-            dcopy_ptr->reserve(k);
-        }
+        auto ptrs = obtain_pointers(output_indices, output_distances, k);
+        auto icopy_ptr = ptrs.first;
+        auto dcopy_ptr = ptrs.second;
 
         my_parent->my_index.get_nns_by_vector(query, k, get_search_k(k), icopy_ptr, dcopy_ptr);
 
