@@ -53,11 +53,12 @@ template<class Distance_, typename Dim_, typename Index_, typename Float_, typen
 class AnnoySearcher : public knncolle::Searcher<Index_, Float_> {
 private:
     const AnnoyPrebuilt<Distance_, Dim_, Index_, Float_, InternalIndex_, InternalData_>* my_parent;
-    std::vector<InternalIndex_> my_indices;
-    std::vector<InternalData_> my_distances;
 
-    static constexpr bool same_internal = std::is_same<Float_, InternalData_>::value;
-    typename std::conditional<!same_internal, std::vector<InternalData_>, bool>::type my_buffer;
+    static constexpr bool same_internal_data = std::is_same<Float_, InternalData_>::value;
+    typename std::conditional<!same_internal_data, std::vector<InternalData_>, bool>::type my_buffer, my_distances;
+
+    static constexpr bool same_internal_index = std::is_same<Index_, InternalIndex_>::value;
+    std::vector<InternalIndex_> my_indices;
 
     int get_search_k(int k) const {
         if (my_parent->my_search_mult < 0) {
@@ -72,7 +73,7 @@ public:
      * @cond
      */
     AnnoySearcher(const AnnoyPrebuilt<Distance_, Dim_, Index_, Float_, InternalIndex_, InternalData_>* parent) : my_parent(parent) {
-        if constexpr(!same_internal) {
+        if constexpr(!same_internal_data) {
             my_buffer.resize(my_parent->my_dim);
         }
     }
@@ -80,53 +81,138 @@ public:
      * @endcond
      */
 
-public:
-    void search(Index_ i, Index_ k, std::vector<std::pair<Index_, Float_> >& output) {
-        Index_ kp1 = k + 1;
-        my_indices.clear();
-        my_indices.reserve(kp1);
-        my_distances.clear();
-        my_distances.reserve(kp1);
-        my_parent->my_index.get_nns_by_item(i, kp1, get_search_k(kp1), &my_indices, &my_distances); // +1, as it forgets to discard 'self'.
+private:
+    template<typename Type_>
+    static void remove_self(std::vector<Type_>& vec, size_t at) {
+        if (at < vec.size()) {
+            vec.erase(vec.begin() + at);
+        } else {
+            vec.pop_back();
+        }
+    }
 
-        output.clear();
-        output.reserve(k);
-        bool self_found = false;
-        for (size_t x = 0, end = my_indices.size(); x < end; ++x) {
-            if (!self_found && my_indices[x] == i) {
-                self_found = true;
+    template<typename Source_, typename Dest_>
+    static void copy_skip_self(const std::vector<Source_>& source, std::vector<Dest_>& dest, size_t at) {
+        auto sIt = source.begin();
+        size_t end = source.size();
+        dest.clear();
+        dest.reserve(end - 1);
+
+        if (at < end) {
+            dest.insert(dest.end(), sIt, sIt + at);
+            dest.insert(dest.end(), sIt + at + 1, source.end());
+        } else {
+            // Just in case we're full of ties at duplicate points, such that 'c'
+            // is not in the set.  Note that, if self_found=false, we must have at
+            // least 'k+2' points for 'c' to not be detected as its own neighbor.
+            // Thus there is no need to worry whether 'end - 1 != k'; we
+            // are guaranteed to return 'k' elements in this case.
+            dest.insert(dest.end(), sIt, sIt + end - 1);
+        }
+    }
+
+public:
+    void search(Index_ i, Index_ k, std::vector<Index_>* output_indices, std::vector<Float_>* output_distances) {
+        Index_ kp1 = k + 1; // +1, as it forgets to discard 'self'.
+
+        std::vector<InternalIndex_>* icopy_ptr = &my_indices;
+        if (output_indices) {
+            if constexpr(same_internal_index) {
+                icopy_ptr = output_indices;
+            }
+        }
+        icopy_ptr->clear();
+        icopy_ptr->reserve(kp1);
+
+        std::vector<InternalData_>* dcopy_ptr = NULL;
+        if (output_distances) {
+            if constexpr(same_internal_data) {
+                dcopy_ptr = output_distances;
             } else {
-                output.emplace_back(my_indices[x], my_distances[x]);
+                dcopy_ptr = &my_distances;
+            }
+            dcopy_ptr->clear();
+            dcopy_ptr->reserve(kp1);
+        }
+
+        my_parent->my_index.get_nns_by_item(i, kp1, get_search_k(kp1), icopy_ptr, dcopy_ptr);
+
+        size_t at;
+        {
+            const auto& cur_i = *icopy_ptr;
+            at = cur_i.size();
+            InternalIndex_ icopy = i;
+            for (size_t x = 0, end = cur_i.size(); x < end; ++x) {
+                if (cur_i[x] == icopy) {
+                    at = x;
+                    break;
+                }
             }
         }
 
-        // Just in case we're full of ties at duplicate points, such that 'c'
-        // is not in the set.  Note that, if self_found=false, we must have at
-        // least 'K+2' points for 'c' to not be detected as its own neighbor.
-        // Thus there is no need to worry whether we are popping off a non-'c'
-        // element and then returning fewer elements than expected.
-        if (!self_found) {
-            output.pop_back();
+        if (output_indices) {
+            if constexpr(same_internal_index) {
+                remove_self(*output_indices, at);
+            } else {
+                copy_skip_self(my_indices, *output_indices, at);
+            }
+        }
+
+        if (output_distances) {
+            if constexpr(same_internal_data) {
+                remove_self(*output_distances, at);
+            } else {
+                copy_skip_self(my_distances, *output_distances, at);
+            }
         }
     }
-        
-    void search(const Float_* query, Index_ k, std::vector<std::pair<Index_, Float_> >& output) {
-        my_indices.clear();
-        my_indices.reserve(k);
-        my_distances.clear();
-        my_distances.reserve(k);
 
-        if constexpr(same_internal) {
-            my_parent->my_index.get_nns_by_vector(query, k, get_search_k(k), &my_indices, &my_distances);
-        } else {
-            std::copy_n(query, my_parent->my_dim, my_buffer.begin());
-            my_parent->my_index.get_nns_by_vector(my_buffer.data(), k, get_search_k(k), &my_indices, &my_distances);
+private:
+    void search_raw(const InternalData_* query, Index_ k, std::vector<Index_>* output_indices, std::vector<Float_>* output_distances) {
+        std::vector<InternalIndex_>* icopy_ptr = &my_indices;
+        if (output_indices) {
+            if constexpr(same_internal_index) {
+                icopy_ptr = output_indices;
+            }
+        }
+        icopy_ptr->clear();
+        icopy_ptr->reserve(k);
+
+        std::vector<InternalData_>* dcopy_ptr = NULL;
+        if (output_distances) {
+            if constexpr(same_internal_data) {
+                dcopy_ptr = output_distances;
+            } else {
+                dcopy_ptr = &my_distances;
+            }
+            dcopy_ptr->clear();
+            dcopy_ptr->reserve(k);
         }
 
-        output.clear();
-        output.reserve(k);
-        for (size_t x = 0, end = my_indices.size(); x < end; ++x) {
-            output.emplace_back(my_indices[x], my_distances[x]);
+        my_parent->my_index.get_nns_by_vector(query, k, get_search_k(k), icopy_ptr, dcopy_ptr);
+
+        if (output_indices) {
+            if constexpr(!same_internal_index) {
+                output_indices->clear();
+                output_indices->insert(output_indices->end(), my_indices.begin(), my_indices.end());
+            }
+        }
+
+        if (output_distances) {
+            if constexpr(!same_internal_data) {
+                output_distances->clear();
+                output_distances->insert(output_distances->end(), my_distances.begin(), my_distances.end());
+            }
+        }
+    }
+
+public:
+    void search(const Float_* query, Index_ k, std::vector<Index_>* output_indices, std::vector<Float_>* output_distances) {
+        if constexpr(same_internal_data) {
+            search_raw(query, k, output_indices, output_distances);
+        } else {
+            std::copy_n(query, my_parent->my_dim, my_buffer.begin());
+            search_raw(my_buffer.data(), k, output_indices, output_distances);
         }
     }
 };
