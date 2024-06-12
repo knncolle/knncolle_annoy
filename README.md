@@ -105,3 +105,12 @@ See [`extern/CMakeLists.txt`](extern/CMakeLists.txt) to find compatible versions
 
 If you're not using CMake, the simple approach is to just copy the files in `include/` - either directly or with Git submodules - and include their path during compilation with, e.g., GCC's `-I`.
 This requires the external dependencies listed in [`extern/CMakeLists.txt`](extern/CMakeLists.txt), which also need to be made available during compilation.
+
+## Note on vectorization
+
+Annoy will attempt to perform manual vectorization based on SSE and/or AVX instructions.
+This may result in differences in the results across machines due to changes in numeric precision across architectures with varying support for SSE/AVX intrinsics.
+For the most part, such differences can be avoided by consistently compiling for the "near-lowest common denominator" (such as the typical `x86-64` default for GCC and Clang) 
+and ensuring that the more specific instruction subsets like SSE3 and AVX are not enabled (which are typically off by default anyway).
+Nonetheless, if reproducibility across architectures is important, it can be achieved at the cost of some speed by defining the `NO_MANUAL_VECTORIZATION` macro,
+which will instruct Annoy to disable its vectorized optimizations.
