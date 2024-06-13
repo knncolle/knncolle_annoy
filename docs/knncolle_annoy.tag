@@ -32,6 +32,13 @@
       <anchor>a326d9025842012fa999d3e0da9124bfd</anchor>
       <arglist>()=default</arglist>
     </member>
+    <member kind="function">
+      <type>AnnoyOptions &amp;</type>
+      <name>get_options</name>
+      <anchorfile>classknncolle__annoy_1_1AnnoyBuilder.html</anchorfile>
+      <anchor>aaa5e91bcc90bcc5dfa6150724d4b8af7</anchor>
+      <arglist>()</arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>knncolle_annoy::AnnoyOptions</name>
