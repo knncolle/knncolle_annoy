@@ -4,7 +4,7 @@
 #include <random>
 #include <vector>
 
-class AnnoyTest : public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > {
+class TestCore {
 protected:
     inline static int nobs, ndim;
     inline static std::vector<double> data;
@@ -57,7 +57,9 @@ protected:
 
         sanity_checks(indices, distances);
     }
+};
 
+class AnnoyTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > { 
 protected:
     void SetUp() {
         assemble(std::get<0>(GetParam()));
@@ -70,6 +72,8 @@ TEST_P(AnnoyTest, FindEuclidean) {
     knncolle::SimpleMatrix mat(ndim, nobs, data.data());
     knncolle_annoy::AnnoyBuilder<Annoy::Euclidean> builder;
     auto bptr = builder.build_unique(mat);
+    EXPECT_EQ(bptr->num_dimensions(), ndim);
+    EXPECT_EQ(bptr->num_observations(), nobs);
     auto bsptr = bptr->initialize();
 
     // Trying with a different type.
@@ -92,6 +96,16 @@ TEST_P(AnnoyTest, FindEuclidean) {
         EXPECT_EQ(dres, dres0);
         bsptr->search(x, k, &ires0, NULL);
         EXPECT_EQ(ires, ires0);
+
+        // Checking the distance to the most distant neighbor. This needs to be a little
+        // gentle w.r.t. tolerances due to differences in precision.
+        {
+            auto furthest = ires.back();
+            auto current = data.data() + x * ndim;
+            auto ptr = data.data() + furthest * ndim;
+            auto expected = knncolle::EuclideanDistance::raw_distance<double>(current, ptr, ndim);
+            EXPECT_LT(std::abs(knncolle::EuclideanDistance::normalize(expected) - dres.back()), 0.0001);
+        }
 
         // Checking the different types.
         bsptr2->search(x, k, &ires2, &dres2);
@@ -123,6 +137,16 @@ TEST_P(AnnoyTest, FindManhattan) {
     for (int x = 0; x < nobs; ++x) {
         bsptr->search(x, k, &ires, &dres);
         sanity_checks(ires, dres, k, x);
+
+        // Checking the distance to the most distant neighbor. This needs to be a little
+        // gentle w.r.t. tolerances due to differences in precision.
+        {
+            auto furthest = ires.back();
+            auto current = data.data() + x * ndim;
+            auto ptr = data.data() + furthest * ndim;
+            auto expected = knncolle::ManhattanDistance::raw_distance<double>(current, ptr, ndim);
+            EXPECT_LT(std::abs(knncolle::ManhattanDistance::normalize(expected) - dres.back()), 0.0001);
+        }
     }
 }
 
@@ -192,3 +216,92 @@ INSTANTIATE_TEST_SUITE_P(
         ::testing::Values(3, 10, 20) // number of neighbors (one is greater than # observations, to test correct limiting)
     )
 );
+
+TEST(Annoy, Constructor) {
+    // Check that the overloaded constructors work.
+    knncolle_annoy::AnnoyOptions opt;
+    EXPECT_NE(opt.num_trees, 100);
+    opt.num_trees = 100;
+
+    knncolle_annoy::AnnoyBuilder<> ab(opt);
+    auto& an_opt = ab.get_options();
+    EXPECT_EQ(an_opt.num_trees, 100);
+
+    // Check that assignment to the options works.
+    an_opt.num_trees = 500;
+    EXPECT_EQ(ab.get_options().num_trees, 500);
+}
+
+class AnnoyMiscTest : public TestCore, public ::testing::Test {
+public:
+    void SetUp() {
+        assemble({ 100, 5 });
+    }
+};
+
+TEST_F(AnnoyMiscTest, SearchMult) {
+    knncolle_annoy::AnnoyBuilder<> ab;
+    auto& an_opt = ab.get_options();
+    an_opt.search_mult = 20;
+
+    knncolle::SimpleMatrix<int, int, double> mat(ndim, nobs, data.data());
+    auto ptr = ab.build_unique(mat);
+    auto sptr = ptr->initialize();
+
+    std::vector<int> ires;
+    std::vector<double> dres;
+    sptr->search(0, 10, &ires, &dres);
+    sanity_checks(ires, dres, 10, 0);
+}
+
+TEST(Annoy, Duplicates) {
+    // Checking that the neighbor identification works correctly when there are
+    // so many duplicates that an observation doesn't get reported by Annoy in
+    // its own list of neighbors.
+    int ndim = 5;
+    int nobs = 100;
+    std::vector<double> data(ndim * nobs);
+    knncolle::SimpleMatrix<int, int, double> mat(ndim, nobs, data.data());
+
+    {
+        knncolle_annoy::AnnoyBuilder<Annoy::Euclidean, decltype(mat)> builder; 
+        auto ptr = builder.build_unique(mat);
+        auto sptr = ptr->initialize();
+
+        std::vector<int> ires;
+        std::vector<double> dres;
+
+        for (int x = 0; x < nobs; ++x) {
+            sptr->search(x, 10, &ires, &dres);
+            EXPECT_EQ(ires.size(), 10);
+            for (const auto& ix : ires) { // self is not in there.
+                EXPECT_TRUE(ix != x);
+            }
+
+            EXPECT_EQ(dres.back(), 0);
+            EXPECT_EQ(dres.front(), 0);
+        }
+    }
+
+    // Same for another type in the interface, which causes us to use
+    // slightly different code for removing the extra observation.
+    {
+        knncolle_annoy::AnnoyBuilder<Annoy::Euclidean, decltype(mat), float> builder; 
+        auto ptr = builder.build_unique(mat);
+        auto sptr = ptr->initialize();
+
+        std::vector<int> ires;
+        std::vector<float> dres;
+
+        for (int x = 0; x < nobs; ++x) {
+            sptr->search(x, 10, &ires, &dres);
+            EXPECT_EQ(ires.size(), 10);
+            for (const auto& ix : ires) { // self is not in there.
+                EXPECT_TRUE(ix != x);
+            }
+
+            EXPECT_EQ(dres.back(), 0);
+            EXPECT_EQ(dres.front(), 0);
+        }
+    }
+}

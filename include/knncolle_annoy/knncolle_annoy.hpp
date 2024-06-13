@@ -64,7 +64,7 @@ private:
         if (my_parent->my_search_mult < 0) {
             return -1;
         } else {
-            return my_parent->my_search_mult * k + 0.5; // rounded up.
+            return my_parent->my_search_mult * static_cast<double>(k) + 0.5; // rounded.
         }
     }
 
@@ -325,6 +325,14 @@ public:
      * Default constructor.
      */
     AnnoyBuilder() = default;
+
+    /**
+     * @return Options to the Annoy algorithm,
+     * to be modified prior to calling `build_raw()` and friends.
+     */
+    AnnoyOptions& get_options() {
+        return my_options;
+    }
 
 public:
     knncolle::Prebuilt<typename Matrix_::dimension_type, typename Matrix_::index_type, Float_>* build_raw(const Matrix_& data) const {
