@@ -38,7 +38,7 @@ if (use_exact) {
     knncolle::KmknnBuilder<> kbuilder;
     ptr = kbuilder.build_unique(mat);
 } else {
-    knncolle::AnnoyBuilder<> abuilder;
+    knncolle_annoy::AnnoyBuilder<> abuilder;
     ptr = abuilder.build_unique(mat);
 }
 ```
