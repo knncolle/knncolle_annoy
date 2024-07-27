@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['annoy_0',['knncolle bindings for Annoy',['../md__2github_2workspace_2README.html',1,'']]]
+  ['annoy_0',['knncolle bindings for Annoy',['../index.html',1,'']]]
 ];

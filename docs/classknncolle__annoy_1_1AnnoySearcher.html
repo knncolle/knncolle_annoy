@@ -13,6 +13,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -70,7 +71,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>knncolle_annoy</b></li><li class="navelem"><a class="el" href="classknncolle__annoy_1_1AnnoySearcher.html">AnnoySearcher</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespaceknncolle__annoy.html">knncolle_annoy</a></li><li class="navelem"><a class="el" href="classknncolle__annoy_1_1AnnoySearcher.html">AnnoySearcher</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -101,6 +102,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a3a588b6bea8c42116a27adb9212efe6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d59ec98dc05ada3cbb6ebe13b9b0caa" id="r_a6d59ec98dc05ada3cbb6ebe13b9b0caa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classknncolle__annoy_1_1AnnoySearcher.html#a6d59ec98dc05ada3cbb6ebe13b9b0caa">search</a> (<a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">const</a> <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">Float_</a> *<a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">query</a>, <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">Index_</a> <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">k</a>, std::vector&lt; <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">Index_</a> &gt; *<a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">output_indices</a>, std::vector&lt; <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">Float_</a> &gt; *<a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">output_distances</a>)</td></tr>
 <tr class="separator:a6d59ec98dc05ada3cbb6ebe13b9b0caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classknncolle_1_1Searcher"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classknncolle_1_1Searcher')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el"  href="https://knncolle.github.io/knncolle/classknncolle_1_1Searcher.html">knncolle::Searcher&lt; Index_, Float_ &gt;</a></td></tr>
+<tr class="memitem:a8362d0f6ea1b7f6e09d26a9188d31d1d inherit pub_methods_classknncolle_1_1Searcher" id="r_a8362d0f6ea1b7f6e09d26a9188d31d1d"><td class="memItemLeft" align="right" valign="top">
+virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Searcher.html#a8362d0f6ea1b7f6e09d26a9188d31d1d">can_search_all</a> () const</td></tr>
+<tr class="separator:a8362d0f6ea1b7f6e09d26a9188d31d1d inherit pub_methods_classknncolle_1_1Searcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd4da2c541a1b9c71032e4a828c52a3c inherit pub_methods_classknncolle_1_1Searcher" id="r_acd4da2c541a1b9c71032e4a828c52a3c"><td class="memItemLeft" align="right" valign="top">
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Searcher.html#acd4da2c541a1b9c71032e4a828c52a3c">search_all</a> (Index_ i, Float_ distance, std::vector&lt; Index_ &gt; *output_indices, std::vector&lt; Float_ &gt; *output_distances)</td></tr>
+<tr class="separator:acd4da2c541a1b9c71032e4a828c52a3c inherit pub_methods_classknncolle_1_1Searcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a059a6bc370ef98ee7be929448ceda1cf inherit pub_methods_classknncolle_1_1Searcher" id="r_a059a6bc370ef98ee7be929448ceda1cf"><td class="memItemLeft" align="right" valign="top">
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Searcher.html#a059a6bc370ef98ee7be929448ceda1cf">search_all</a> (const Float_ *query, Float_ distance, std::vector&lt; Index_ &gt; *output_indices, std::vector&lt; Float_ &gt; *output_distances)</td></tr>
+<tr class="separator:a059a6bc370ef98ee7be929448ceda1cf inherit pub_methods_classknncolle_1_1Searcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">class</a> <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">Distance_</a>, <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">typename</a> <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">Dim_</a>, <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">typename</a> <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">Index_</a>, <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">typename</a> <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">Float_</a>, <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">typename</a> <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">InternalIndex_</a>, <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">typename</a> <a class="el" href="classknncolle__annoy_1_1AnnoyPrebuilt.html">InternalData_</a>&gt;<br />

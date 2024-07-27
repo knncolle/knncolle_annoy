@@ -8,6 +8,7 @@
     <class kind="class">knncolle_annoy::AnnoySearcher</class>
     <class kind="class">knncolle_annoy::AnnoyPrebuilt</class>
     <class kind="class">knncolle_annoy::AnnoyBuilder</class>
+    <namespace>knncolle_annoy</namespace>
   </compound>
   <compound kind="class">
     <name>knncolle_annoy::AnnoyBuilder</name>
@@ -80,9 +81,18 @@
     <templarg>typename InternalData_</templarg>
     <base>Searcher&lt; Index_, Float_ &gt;</base>
   </compound>
+  <compound kind="namespace">
+    <name>knncolle_annoy</name>
+    <filename>namespaceknncolle__annoy.html</filename>
+    <class kind="class">knncolle_annoy::AnnoyBuilder</class>
+    <class kind="struct">knncolle_annoy::AnnoyOptions</class>
+    <class kind="class">knncolle_annoy::AnnoyPrebuilt</class>
+    <class kind="class">knncolle_annoy::AnnoySearcher</class>
+  </compound>
   <compound kind="page">
-    <name>md__2github_2workspace_2README</name>
+    <name>index</name>
     <title>knncolle bindings for Annoy</title>
-    <filename>md__2github_2workspace_2README.html</filename>
+    <filename>index.html</filename>
+    <docanchor file="index.html">md__2github_2workspace_2README</docanchor>
   </compound>
 </tagfile>

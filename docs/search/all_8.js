@@ -5,8 +5,9 @@ var searchData=
   ['kmknnoptions_2',['KmknnOptions',['https://knncolle.github.io/knncolle/structknncolle_1_1KmknnOptions.html',1,'knncolle']]],
   ['kmknnprebuilt_3',['kmknnprebuilt',['https://knncolle.github.io/knncolle/classknncolle_1_1KmknnPrebuilt.html',1,'knncolle::KmknnPrebuilt&lt; class Distance_, typename Dim_, typename Index_, typename Store_, typename Float_ &gt;'],['https://knncolle.github.io/knncolle/classknncolle_1_1KmknnPrebuilt.html#aa45f08f940ab256706b3c27d00d2992a',1,'knncolle::KmknnPrebuilt::KmknnPrebuilt()']]],
   ['kmknnsearcher_4',['KmknnSearcher',['https://knncolle.github.io/knncolle/classknncolle_1_1KmknnSearcher.html',1,'knncolle']]],
-  ['knncolle_5',['knncolle',['https://knncolle.github.io/knncolle/classknncolle_1_1BruteforceBuilder.html',1,'']]],
-  ['knncolle_20bindings_20for_20annoy_6',['knncolle bindings for Annoy',['../md__2github_2workspace_2README.html',1,'']]],
+  ['knncolle_5',['knncolle',['https://knncolle.github.io/knncolle/namespaceknncolle.html',1,'']]],
+  ['knncolle_20bindings_20for_20annoy_6',['knncolle bindings for Annoy',['../index.html',1,'']]],
   ['knncolle_2ehpp_7',['knncolle.hpp',['https://knncolle.github.io/knncolle/knncolle_8hpp.html',1,'']]],
-  ['knncolle_5fannoy_2ehpp_8',['knncolle_annoy.hpp',['../knncolle__annoy_8hpp.html',1,'']]]
+  ['knncolle_5fannoy_8',['knncolle_annoy',['../namespaceknncolle__annoy.html',1,'']]],
+  ['knncolle_5fannoy_2ehpp_9',['knncolle_annoy.hpp',['../knncolle__annoy_8hpp.html',1,'']]]
 ];

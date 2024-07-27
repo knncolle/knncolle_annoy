@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['bindings_20for_20annoy_0',['knncolle bindings for Annoy',['../md__2github_2workspace_2README.html',1,'']]],
+  ['bindings_20for_20annoy_0',['knncolle bindings for Annoy',['../index.html',1,'']]],
   ['bruteforce_2ehpp_1',['Bruteforce.hpp',['https://knncolle.github.io/knncolle/Bruteforce_8hpp.html',1,'']]],
   ['bruteforcebuilder_2',['BruteforceBuilder',['https://knncolle.github.io/knncolle/classknncolle_1_1BruteforceBuilder.html',1,'knncolle']]],
   ['bruteforceprebuilt_3',['BruteforcePrebuilt',['https://knncolle.github.io/knncolle/classknncolle_1_1BruteforcePrebuilt.html',1,'knncolle']]],
@@ -11,5 +11,5 @@ var searchData=
   ['builder_8',['Builder',['https://knncolle.github.io/knncolle/classknncolle_1_1Builder.html',1,'knncolle']]],
   ['builder_2ehpp_9',['Builder.hpp',['https://knncolle.github.io/knncolle/Builder_8hpp.html',1,'']]],
   ['builder_3c_20knncolle_3a_3asimplematrix_3c_20int_2c_20int_2c_20double_20_3e_2c_20double_20_3e_10',['Builder&lt; knncolle::SimpleMatrix&lt; int, int, double &gt;, double &gt;',['https://knncolle.github.io/knncolle/classknncolle_1_1Builder.html',1,'knncolle']]],
-  ['building_20projects_11',['Building projects',['../md__2github_2workspace_2README.html#autotoc_md3',1,'']]]
+  ['building_20projects_11',['Building projects',['../index.html#autotoc_md3',1,'']]]
 ];
