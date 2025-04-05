@@ -22,7 +22,7 @@
 namespace knncolle_annoy {
 
 /**
- * @brief Options for `AnnoyBuilder()` and `AnnoyPrebuilt()`.
+ * @brief Options for `AnnoyBuilder()`. 
  */
 struct AnnoyOptions {
     /**
@@ -39,7 +39,7 @@ struct AnnoyOptions {
     double search_mult = -1;
 };
 
-template<class Distance_, typename Dim_, typename Index_, typename Float_, typename InternalIndex_, typename InternalData_>
+template<typename Index_, typename Data_, typename Distance_, typename AnnoyDistance_, typename AnnoyIndex_, typename AnnoyData_, class AnnoyRng_, class AnnoyThreadPolicy_>
 class AnnoyPrebuilt;
 
 /**
@@ -47,29 +47,45 @@ class AnnoyPrebuilt;
  *
  * Instances of this class are usually constructed using `AnnoyPrebuilt::initialize()`.
  *
- * @tparam Distance_ An **Annoy** class to compute the distance between vectors, e.g., `Annoy::Euclidean`.
- * @tparam Dim_ Integer type for the number of dimensions.
- * @tparam Index_ Integer type for the indices.
- * @tparam Float_ Floating point type for the query data and output distances.
- * @tparam InternalIndex_ Integer type for the internal indices in Annoy.
- * @tparam InternalData_ Floating point type for the internal data in Annoy.
+ * @tparam Index_ Integer type for the observation indices.
+ * @tparam Data_ Numeric type for the input and query data.
+ * @tparam Distance_ Floating-point type for the distances.
+ * @tparam AnnoyDistance_ An **Annoy**-compatible class to compute the distance between vectors, e.g., `Annoy::Euclidean`, `Annoy::Manhattan`.
+ * Note that this is not the same as `knncolle::DistanceMetric`.
+ * @tparam AnnoyIndex_ Integer type for the observation indices in the Annoy index.
+ * @tparam AnnoyData_ Floating-point type for data in the Annoy index.
+ * This defaults to a `float` instead of a `double` to sacrifice some accuracy for performance.
+ * @tparam AnnoyRng_ An **Annoy** class for random number generation.
+ * @tparam AnnoyThreadPolicy_ An **Annoy** class for the threadedness of Annoy index building.
  */
-template<class Distance_, typename Dim_, typename Index_, typename Float_, typename InternalIndex_, typename InternalData_>
-class AnnoySearcher : public knncolle::Searcher<Index_, Float_> {
+template<
+    typename Index_,
+    typename Data_,
+    typename Distance_, 
+    class AnnoyDistance_,
+    typename AnnoyIndex_ = Index_,
+    typename AnnoyData_ = float,
+    class AnnoyRng_ = Annoy::Kiss64Random,
+    class AnnoyThreadPolicy_ = Annoy::AnnoyIndexSingleThreadedBuildPolicy
+>
+class AnnoySearcher final : public knncolle::Searcher<Index_, Data_, Distance_> {
 private:
-    const AnnoyPrebuilt<Distance_, Dim_, Index_, Float_, InternalIndex_, InternalData_>* my_parent;
+    const AnnoyPrebuilt<Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_>& my_parent;
 
-    static constexpr bool same_internal_data = std::is_same<Float_, InternalData_>::value;
-    typename std::conditional<!same_internal_data, std::vector<InternalData_>, bool>::type my_buffer, my_distances;
+    static constexpr bool same_internal_data = std::is_same<Data_, AnnoyData_>::value;
+    typename std::conditional<!same_internal_data, std::vector<AnnoyData_>, bool>::type my_buffer;
 
-    static constexpr bool same_internal_index = std::is_same<Index_, InternalIndex_>::value;
-    std::vector<InternalIndex_> my_indices;
+    static constexpr bool same_internal_index = std::is_same<Index_, AnnoyIndex_>::value;
+    std::vector<AnnoyIndex_> my_indices;
+
+    static constexpr bool same_internal_distance = std::is_same<Distance_, AnnoyData_>::value;
+    typename std::conditional<!same_internal_distance, std::vector<AnnoyData_>, bool>::type my_distances;
 
     int get_search_k(int k) const {
-        if (my_parent->my_search_mult < 0) {
+        if (my_parent.my_search_mult < 0) {
             return -1;
         } else {
-            return my_parent->my_search_mult * static_cast<double>(k) + 0.5; // rounded.
+            return my_parent.my_search_mult * static_cast<double>(k) + 0.5; // rounded.
         }
     }
 
@@ -77,9 +93,9 @@ public:
     /**
      * @cond
      */
-    AnnoySearcher(const AnnoyPrebuilt<Distance_, Dim_, Index_, Float_, InternalIndex_, InternalData_>* parent) : my_parent(parent) {
+    AnnoySearcher(const AnnoyPrebuilt<Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_>& parent) : my_parent(parent) {
         if constexpr(!same_internal_data) {
-            my_buffer.resize(my_parent->my_dim);
+            my_buffer.resize(my_parent.my_dim);
         }
     }
     /**
@@ -87,8 +103,8 @@ public:
      */
 
 private:
-    auto obtain_pointers(std::vector<Index_>* output_indices, std::vector<Float_>* output_distances, Index_ k) {
-        std::vector<InternalIndex_>* icopy_ptr = &my_indices;
+    std::pair<std::vector<AnnoyIndex_>*, std::vector<AnnoyData_>*> obtain_pointers(std::vector<Index_>* output_indices, std::vector<Distance_>* output_distances, Index_ k) {
+        std::vector<AnnoyIndex_>* icopy_ptr = &my_indices;
         if (output_indices) {
             if constexpr(same_internal_index) {
                 icopy_ptr = output_indices;
@@ -97,9 +113,9 @@ private:
         icopy_ptr->clear();
         icopy_ptr->reserve(k);
 
-        std::vector<InternalData_>* dcopy_ptr = NULL;
+        std::vector<AnnoyData_>* dcopy_ptr = NULL;
         if (output_distances) {
-            if constexpr(same_internal_data) {
+            if constexpr(same_internal_distance) {
                 dcopy_ptr = output_distances;
             } else {
                 dcopy_ptr = &my_distances;
@@ -142,21 +158,21 @@ private:
 
 public:
     /**
-     * @copydoc knncolle::Searcher::search() 
+     * @cond
      */
-    void search(Index_ i, Index_ k, std::vector<Index_>* output_indices, std::vector<Float_>* output_distances) {
+    void search(Index_ i, Index_ k, std::vector<Index_>* output_indices, std::vector<Distance_>* output_distances) {
         Index_ kp1 = k + 1; // +1, as it forgets to discard 'self'.
         auto ptrs = obtain_pointers(output_indices, output_distances, kp1);
         auto icopy_ptr = ptrs.first;
         auto dcopy_ptr = ptrs.second;
 
-        my_parent->my_index.get_nns_by_item(i, kp1, get_search_k(kp1), icopy_ptr, dcopy_ptr);
+        my_parent.my_index.get_nns_by_item(i, kp1, get_search_k(kp1), icopy_ptr, dcopy_ptr);
 
         size_t at;
         {
             const auto& cur_i = *icopy_ptr;
             at = cur_i.size();
-            InternalIndex_ icopy = i;
+            AnnoyIndex_ icopy = i;
             for (size_t x = 0, end = cur_i.size(); x < end; ++x) {
                 if (cur_i[x] == icopy) {
                     at = x;
@@ -174,21 +190,24 @@ public:
         }
 
         if (output_distances) {
-            if constexpr(same_internal_data) {
+            if constexpr(same_internal_distance) {
                 remove_self(*output_distances, at);
             } else {
                 copy_skip_self(my_distances, *output_distances, at);
             }
         }
     }
+    /**
+     * @endcond
+     */
 
 private:
-    void search_raw(const InternalData_* query, Index_ k, std::vector<Index_>* output_indices, std::vector<Float_>* output_distances) {
+    void search_raw(const AnnoyData_* query, Index_ k, std::vector<Index_>* output_indices, std::vector<Distance_>* output_distances) {
         auto ptrs = obtain_pointers(output_indices, output_distances, k);
         auto icopy_ptr = ptrs.first;
         auto dcopy_ptr = ptrs.second;
 
-        my_parent->my_index.get_nns_by_vector(query, k, get_search_k(k), icopy_ptr, dcopy_ptr);
+        my_parent.my_index.get_nns_by_vector(query, k, get_search_k(k), icopy_ptr, dcopy_ptr);
 
         if (output_indices) {
             if constexpr(!same_internal_index) {
@@ -198,7 +217,7 @@ private:
         }
 
         if (output_distances) {
-            if constexpr(!same_internal_data) {
+            if constexpr(!same_internal_distance) {
                 output_distances->clear();
                 output_distances->insert(output_distances->end(), my_distances.begin(), my_distances.end());
             }
@@ -207,16 +226,19 @@ private:
 
 public:
     /**
-     * @copydoc knncolle::Searcher::search() 
+     * @cond
      */
-    void search(const Float_* query, Index_ k, std::vector<Index_>* output_indices, std::vector<Float_>* output_distances) {
+    void search(const Data_* query, Index_ k, std::vector<Index_>* output_indices, std::vector<Distance_>* output_distances) {
         if constexpr(same_internal_data) {
             search_raw(query, k, output_indices, output_distances);
         } else {
-            std::copy_n(query, my_parent->my_dim, my_buffer.begin());
+            std::copy_n(query, my_parent.my_dim, my_buffer.begin());
             search_raw(my_buffer.data(), k, output_indices, output_distances);
         }
     }
+    /**
+     * @endcond
+     */
 };
 
 /**
@@ -224,17 +246,28 @@ public:
  *
  * Instances of this class are usually constructed using `AnnoyBuilder::build_raw()`.
  *
- * @tparam Distance_ An **Annoy** class to compute the distance between vectors, e.g., `Annoy::Euclidean`.
- * @tparam Dim_ Integer type for the number of dimensions.
- * For the output of `AnnoyBuilder::build_raw()`, this is set to `Matrix_::dimension_type`.
- * @tparam Index_ Integer type for the indices.
- * For the output of `AnnoyBuilder::build_raw()`, this is set to `Matrix_::index_type`.
- * @tparam Float_ Floating point type for the query data and output distances.
- * @tparam InternalIndex_ Integer type for the internal indices in Annoy.
- * @tparam InternalData_ Floating point type for the internal data in Annoy.
+ * @tparam Index_ Integer type for the observation indices.
+ * @tparam Data_ Numeric type for the input and query data.
+ * @tparam Distance_ Floating-point type for the distances.
+ * @tparam AnnoyDistance_ An **Annoy**-compatible class to compute the distance between vectors, e.g., `Annoy::Euclidean`, `Annoy::Manhattan`.
+ * Note that this is not the same as `knncolle::DistanceMetric`.
+ * @tparam AnnoyIndex_ Integer type for the observation indices in the Annoy index.
+ * @tparam AnnoyData_ Floating-point type for data in the Annoy index.
+ * This defaults to a `float` instead of a `double` to sacrifice some accuracy for performance.
+ * @tparam AnnoyRng_ An **Annoy** class for random number generation.
+ * @tparam AnnoyThreadPolicy_ An **Annoy** class for the threadedness of Annoy index building.
  */
-template<class Distance_, typename Dim_, typename Index_, typename Float_, typename InternalIndex_, typename InternalData_>
-class AnnoyPrebuilt : public knncolle::Prebuilt<Dim_, Index_, Float_> {
+template<
+    typename Index_,
+    typename Data_,
+    typename Distance_, 
+    class AnnoyDistance_,
+    typename AnnoyIndex_ = Index_,
+    typename AnnoyData_ = float,
+    class AnnoyRng_ = Annoy::Kiss64Random,
+    class AnnoyThreadPolicy_ = Annoy::AnnoyIndexSingleThreadedBuildPolicy
+>
+class AnnoyPrebuilt final : public knncolle::Prebuilt<Index_, Data_, Distance_> {
 public:
     /**
      * @cond
@@ -246,17 +279,16 @@ public:
         my_search_mult(options.search_mult),
         my_index(my_dim)
     {
-        typedef typename Matrix_::data_type Data_;
-        auto work = data.create_workspace();
-        if constexpr(std::is_same<Data_, InternalData_>::value) {
+        auto work = data.new_extractor();
+        if constexpr(std::is_same<Data_, AnnoyData_>::value) {
             for (Index_ i = 0; i < my_obs; ++i) {
-                auto ptr = data.get_observation(work);
+                auto ptr = work->next();
                 my_index.add_item(i, ptr);
             }
         } else {
-            std::vector<InternalData_> incoming(my_dim);
+            std::vector<AnnoyData_> incoming(my_dim);
             for (Index_ i = 0; i < my_obs; ++i) {
-                auto ptr = data.get_observation(work);
+                auto ptr = work->next();
                 std::copy_n(ptr, my_dim, incoming.begin());
                 my_index.add_item(i, incoming.data());
             }
@@ -270,34 +302,31 @@ public:
      */
 
 private:
-    Dim_ my_dim;
+    size_t my_dim;
     Index_ my_obs;
     double my_search_mult;
-    Annoy::AnnoyIndex<InternalIndex_, InternalData_, Distance_, Annoy::Kiss64Random, Annoy::AnnoyIndexSingleThreadedBuildPolicy> my_index;
+    Annoy::AnnoyIndex<AnnoyIndex_, AnnoyData_, AnnoyDistance_, AnnoyRng_, AnnoyThreadPolicy_> my_index;
 
-    friend class AnnoySearcher<Distance_, Dim_, Index_, Float_, InternalIndex_, InternalData_>;
+    friend class AnnoySearcher<Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_>;
 
 public:
     /**
-     * @copydoc knncolle::Prebuilt::num_dimensions() 
+     * @cond
      */
-    Dim_ num_dimensions() const {
+    size_t num_dimensions() const {
         return my_dim;
     }
 
-    /**
-     * @copydoc knncolle::Prebuilt::num_observations() 
-     */
     Index_ num_observations() const {
         return my_obs;
     }
 
-    /**
-     * Creates an `AnnoySearcher` instance.
-     */
-    std::unique_ptr<knncolle::Searcher<Index_, Float_> > initialize() const {
-        return std::make_unique<AnnoySearcher<Distance_, Dim_, Index_, Float_, InternalIndex_, InternalData_> >(this);
+    std::unique_ptr<knncolle::Searcher<Index_, Data_, Distance_> > initialize() const {
+        return std::make_unique<AnnoySearcher<Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_> >(*this);
     }
+    /**
+     * @endcond
+     */
 };
 
 /**
@@ -314,21 +343,31 @@ public:
  * Annoy.
  * https://github.com/spotify/annoy
  *
- * @tparam Distance_ An **Annoy** class to compute the distance between vectors, e.g., `Annoy::Euclidean`, `Annoy::Manhattan`.
- * Note that this is not the same as `knncolle::MockDistance`.
- * @tparam Matrix_ Matrix-like object satisfying the `knncolle::MockMatrix` interface.
- * @tparam Float_ Floating point type for the query data and output distances.
- * @tparam InternalIndex_ Integer type for the internal indices in Annoy.
- * @tparam InternalData_ Floating point type for the internal data in Annoy.
+ * @tparam Index_ Integer type for the observation indices.
+ * @tparam Data_ Numeric type for the input and query data.
+ * @tparam Distance_ Floating-point type for the distances.
+ * @tparam AnnoyDistance_ An **Annoy**-compatible class to compute the distance between vectors, e.g., `Annoy::Euclidean`, `Annoy::Manhattan`.
+ * Note that this is not the same as `knncolle::DistanceMetric`.
+ * @tparam AnnoyIndex_ Integer type for the observation indices in the Annoy index.
+ * @tparam AnnoyData_ Floating-point type for data in the Annoy index.
  * This defaults to a `float` instead of a `double` to sacrifice some accuracy for performance.
+ * @tparam AnnoyRng_ An **Annoy** class for random number generation.
+ * @tparam AnnoyThreadPolicy_ An **Annoy** class for the threadedness of Annoy index building.
+ * @tparam Matrix_ Class of the input data matrix. 
+ * This should satisfy the `knncolle::Matrix` interface.
  */
 template<
-    class Distance_ = Annoy::Euclidean,
-    class Matrix_ = knncolle::SimpleMatrix<int, int, double>, 
-    typename Float_ = double, 
-    typename InternalIndex_ = typename Matrix_::index_type, 
-    typename InternalData_ = float>
-class AnnoyBuilder : public knncolle::Builder<Matrix_, Float_> {
+    typename Index_,
+    typename Data_,
+    typename Distance_, 
+    class AnnoyDistance_,
+    typename AnnoyIndex_ = Index_,
+    typename AnnoyData_ = float,
+    class AnnoyRng_ = Annoy::Kiss64Random,
+    class AnnoyThreadPolicy_ = Annoy::AnnoyIndexSingleThreadedBuildPolicy,
+    class Matrix_ = knncolle::Matrix<Index_, Data_>
+>
+class AnnoyBuilder : public knncolle::Builder<Index_, Data_, Distance_, Matrix_> {
 private:
     AnnoyOptions my_options;
 
@@ -353,11 +392,14 @@ public:
 
 public:
     /**
-     * Creates an `AnnoyPrebuilt` instance.
+     * @cond
      */
-    knncolle::Prebuilt<typename Matrix_::dimension_type, typename Matrix_::index_type, Float_>* build_raw(const Matrix_& data) const {
-        return new AnnoyPrebuilt<Distance_, typename Matrix_::dimension_type, typename Matrix_::index_type, Float_, InternalIndex_, InternalData_>(data, my_options);
+    knncolle::Prebuilt<Index_, Data_, Distance_>* build_raw(const Matrix_& data) const {
+        return new AnnoyPrebuilt<Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_>(data, my_options);
     }
+    /**
+     * @endcond
+     */
 };
 
 }
