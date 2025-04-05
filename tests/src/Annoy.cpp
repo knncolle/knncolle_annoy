@@ -263,47 +263,36 @@ TEST(Annoy, Duplicates) {
     int ndim = 5;
     int nobs = 100;
     std::vector<double> data(ndim * nobs);
-    knncolle::SimpleMatrix<int, double> mat(ndim, nobs, data.data());
 
-    {
-        knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Euclidean> builder; 
-        auto ptr = builder.build_unique(mat);
-        auto sptr = ptr->initialize();
+    knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Euclidean> builder; 
+    auto ptr = builder.build_unique(knncolle::SimpleMatrix<int, double>(ndim, nobs, data.data()));
+    auto sptr = ptr->initialize();
+    std::vector<int> ires;
+    std::vector<double> dres;
 
-        std::vector<int> ires;
-        std::vector<double> dres;
-
-        for (int x = 0; x < nobs; ++x) {
-            sptr->search(x, 10, &ires, &dres);
-            EXPECT_EQ(ires.size(), 10);
-            for (const auto& ix : ires) { // self is not in there.
-                EXPECT_TRUE(ix != x);
-            }
-
-            EXPECT_EQ(dres.back(), 0);
-            EXPECT_EQ(dres.front(), 0);
-        }
-    }
-
-    // Same for another type in the interface, which causes us to use
+    // Using another index/distance type in the interface, which causes us to use
     // slightly different code for removing the extra observation.
-    {
-        knncolle_annoy::AnnoyBuilder<int, double, float, Annoy::Euclidean> builder; 
-        auto ptr = builder.build_unique(mat);
-        auto sptr = ptr->initialize();
+    knncolle_annoy::AnnoyBuilder<size_t, double, float, Annoy::Euclidean> builder2; 
+    auto ptr2 = builder2.build_unique(knncolle::SimpleMatrix<size_t, double>(ndim, nobs, data.data()));
+    auto sptr2 = ptr2->initialize();
+    std::vector<size_t> ires2;
+    std::vector<float> dres2;
 
-        std::vector<int> ires;
-        std::vector<float> dres;
-
-        for (int x = 0; x < nobs; ++x) {
-            sptr->search(x, 10, &ires, &dres);
-            EXPECT_EQ(ires.size(), 10);
-            for (const auto& ix : ires) { // self is not in there.
-                EXPECT_TRUE(ix != x);
-            }
-
-            EXPECT_EQ(dres.back(), 0);
-            EXPECT_EQ(dres.front(), 0);
+    for (int x = 0; x < nobs; ++x) {
+        sptr->search(x, 10, &ires, &dres);
+        EXPECT_EQ(ires.size(), 10);
+        for (const auto& ix : ires) { // self is not in there.
+            EXPECT_TRUE(ix != x);
         }
+        EXPECT_EQ(dres.back(), 0);
+        EXPECT_EQ(dres.front(), 0);
+
+        sptr2->search(x, 10, &ires2, &dres2);
+        EXPECT_EQ(ires2.size(), 10);
+        for (const auto& ix : ires2) { // self is not in there.
+            EXPECT_TRUE(ix != x);
+        }
+        EXPECT_EQ(dres2.back(), 0);
+        EXPECT_EQ(dres2.front(), 0);
     }
 }

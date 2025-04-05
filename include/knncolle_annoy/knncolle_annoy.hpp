@@ -157,9 +157,6 @@ private:
     }
 
 public:
-    /**
-     * @cond
-     */
     void search(Index_ i, Index_ k, std::vector<Index_>* output_indices, std::vector<Distance_>* output_distances) {
         Index_ kp1 = k + 1; // +1, as it forgets to discard 'self'.
         auto ptrs = obtain_pointers(output_indices, output_distances, kp1);
@@ -197,9 +194,6 @@ public:
             }
         }
     }
-    /**
-     * @endcond
-     */
 
 private:
     void search_raw(const AnnoyData_* query, Index_ k, std::vector<Index_>* output_indices, std::vector<Distance_>* output_distances) {
@@ -225,9 +219,6 @@ private:
     }
 
 public:
-    /**
-     * @cond
-     */
     void search(const Data_* query, Index_ k, std::vector<Index_>* output_indices, std::vector<Distance_>* output_distances) {
         if constexpr(same_internal_data) {
             search_raw(query, k, output_indices, output_distances);
@@ -236,9 +227,6 @@ public:
             search_raw(my_buffer.data(), k, output_indices, output_distances);
         }
     }
-    /**
-     * @endcond
-     */
 };
 
 /**
@@ -310,9 +298,6 @@ private:
     friend class AnnoySearcher<Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_>;
 
 public:
-    /**
-     * @cond
-     */
     size_t num_dimensions() const {
         return my_dim;
     }
@@ -321,12 +306,12 @@ public:
         return my_obs;
     }
 
+    /**
+     * Creates a `AnnoySearcher` instance.
+     */
     std::unique_ptr<knncolle::Searcher<Index_, Data_, Distance_> > initialize() const {
         return std::make_unique<AnnoySearcher<Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_> >(*this);
     }
-    /**
-     * @endcond
-     */
 };
 
 /**
@@ -392,14 +377,11 @@ public:
 
 public:
     /**
-     * @cond
+     * Creates a `AnnoyPrebuilt` instance.
      */
     knncolle::Prebuilt<Index_, Data_, Distance_>* build_raw(const Matrix_& data) const {
         return new AnnoyPrebuilt<Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_>(data, my_options);
     }
-    /**
-     * @endcond
-     */
 };
 
 }
