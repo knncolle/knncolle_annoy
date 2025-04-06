@@ -70,22 +70,38 @@ TEST_P(AnnoyTest, FindEuclidean) {
     int k = std::get<1>(GetParam());    
 
     knncolle::SimpleMatrix mat(ndim, nobs, data.data());
-    knncolle_annoy::AnnoyBuilder<Annoy::Euclidean> builder;
+    knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Euclidean> builder;
     auto bptr = builder.build_unique(mat);
     EXPECT_EQ(bptr->num_dimensions(), ndim);
     EXPECT_EQ(bptr->num_observations(), nobs);
     auto bsptr = bptr->initialize();
 
-    // Trying with a different type.
-    knncolle::SimpleMatrix<int, size_t, double> mat2(ndim, nobs, data.data());
-    knncolle_annoy::AnnoyBuilder<Annoy::Euclidean, decltype(mat2), float, int, float> builder2;
+    // Trying with different types; mismatch between Index_ and AnnoyIndex_.
+    knncolle::SimpleMatrix<size_t, double> mat2(ndim, nobs, data.data());
+    knncolle_annoy::AnnoyBuilder<size_t, double, double, Annoy::Euclidean, int> builder2;
     auto bptr2 = builder2.build_unique(mat2);
     auto bsptr2 = bptr2->initialize();
 
+    // NO mismatch between Data_ and AnnoyData_.
+    std::vector<float> fdata(data.begin(), data.end());
+    knncolle::SimpleMatrix<int, float> mat3(ndim, nobs, fdata.data());
+    knncolle_annoy::AnnoyBuilder<int, float, double, Annoy::Euclidean> builder3;
+    auto bptr3 = builder3.build_unique(mat3);
+    auto bsptr3 = bptr3->initialize();
+
+    // NO mismatch between Distance_ and AnnoyData_.
+    knncolle_annoy::AnnoyBuilder<int, double, float, Annoy::Euclidean> builder4;
+    auto bptr4 = builder4.build_unique(mat);
+    auto bsptr4 = bptr4->initialize();
+
     std::vector<int> ires, ires0;
-    std::vector<size_t> ires2, ires20;
+    std::vector<size_t> ires2;
+    std::vector<int> ires3, ires4;
     std::vector<double> dres, dres0;
-    std::vector<float> dres2, dres20;
+    std::vector<double> dres2, dres3;
+    std::vector<float> dres4;
+
+    knncolle::EuclideanDistance<double, double> eucdist;
 
     for (int x = 0; x < nobs; ++x) {
         bsptr->search(x, k, &ires, &dres);
@@ -103,34 +119,49 @@ TEST_P(AnnoyTest, FindEuclidean) {
             auto furthest = ires.back();
             auto current = data.data() + x * ndim;
             auto ptr = data.data() + furthest * ndim;
-            auto expected = knncolle::EuclideanDistance::raw_distance<double>(current, ptr, ndim);
-            EXPECT_LT(std::abs(knncolle::EuclideanDistance::normalize(expected) - dres.back()), 0.0001);
+            auto expected = eucdist.raw(ndim, current, ptr);
+            EXPECT_LT(std::abs(eucdist.normalize(expected) - dres.back()), 0.0001);
         }
 
-        // Checking the different types.
+        // Checking the different types (2)
         bsptr2->search(x, k, &ires2, &dres2);
         EXPECT_EQ(ires.size(), ires2.size());
         EXPECT_EQ(ires.size(), dres2.size());
-
         for (size_t j = 0; j < ires.size(); ++j) {
             EXPECT_EQ(ires[j], ires2[j]);
             EXPECT_FLOAT_EQ(dres[j], dres2[j]);
         }
 
-        bsptr2->search(x, k, NULL, &dres20);
-        EXPECT_EQ(dres2, dres20);
-        bsptr2->search(x, k, &ires20, NULL);
-        EXPECT_EQ(ires2, ires20);
+        // Checking the different types (3)
+        bsptr3->search(x, k, &ires3, &dres3);
+        EXPECT_EQ(ires.size(), ires3.size());
+        EXPECT_EQ(ires.size(), dres3.size());
+
+        for (size_t j = 0; j < ires.size(); ++j) {
+            EXPECT_EQ(ires[j], ires3[j]);
+            EXPECT_FLOAT_EQ(dres[j], dres3[j]);
+        }
+
+        // Checking the different types (4)
+        bsptr4->search(x, k, &ires4, &dres4);
+        EXPECT_EQ(ires.size(), ires4.size());
+        EXPECT_EQ(ires.size(), dres4.size());
+        for (size_t j = 0; j < ires.size(); ++j) {
+            EXPECT_EQ(ires[j], ires4[j]);
+            EXPECT_FLOAT_EQ(dres[j], dres4[j]);
+        }
     }
 }
 
 TEST_P(AnnoyTest, FindManhattan) {
     int k = std::get<1>(GetParam());    
 
-    knncolle::SimpleMatrix mat(ndim, nobs, data.data());
-    knncolle_annoy::AnnoyBuilder<Annoy::Manhattan> builder;
+    knncolle::SimpleMatrix<int, double> mat(ndim, nobs, data.data());
+    knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Manhattan> builder;
     auto bptr = builder.build_unique(mat);
     auto bsptr = bptr->initialize();
+
+    knncolle::ManhattanDistance<double, double> mandist;
 
     std::vector<int> ires;
     std::vector<double> dres;
@@ -144,8 +175,8 @@ TEST_P(AnnoyTest, FindManhattan) {
             auto furthest = ires.back();
             auto current = data.data() + x * ndim;
             auto ptr = data.data() + furthest * ndim;
-            auto expected = knncolle::ManhattanDistance::raw_distance<double>(current, ptr, ndim);
-            EXPECT_LT(std::abs(knncolle::ManhattanDistance::normalize(expected) - dres.back()), 0.0001);
+            auto expected = mandist.raw(ndim, current, ptr);
+            EXPECT_LT(std::abs(mandist.normalize(expected) - dres.back()), 0.0001);
         }
     }
 }
@@ -153,21 +184,35 @@ TEST_P(AnnoyTest, FindManhattan) {
 TEST_P(AnnoyTest, QueryEuclidean) {
     int k = std::get<1>(GetParam());    
 
-    knncolle::SimpleMatrix mat(ndim, nobs, data.data());
-    knncolle_annoy::AnnoyBuilder<Annoy::Euclidean> builder;
+    knncolle::SimpleMatrix<int, double> mat(ndim, nobs, data.data());
+    knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Euclidean> builder;
     auto bptr = builder.build_unique(mat);
     auto bsptr = bptr->initialize();
 
-    // Trying with a different type.
-    knncolle::SimpleMatrix<int, size_t, double> mat2(ndim, nobs, data.data());
-    knncolle_annoy::AnnoyBuilder<Annoy::Euclidean, decltype(mat2), float, int, float> builder2;
+    // Trying with different types; mismatch between Index_ and AnnoyIndex_.
+    knncolle::SimpleMatrix<size_t, double> mat2(ndim, nobs, data.data());
+    knncolle_annoy::AnnoyBuilder<size_t, double, double, Annoy::Euclidean, int> builder2;
     auto bptr2 = builder2.build_unique(mat2);
     auto bsptr2 = bptr2->initialize();
 
+    // NO mismatch between Data_ and AnnoyData_.
+    std::vector<float> fdata(data.begin(), data.end());
+    knncolle::SimpleMatrix<int, float> mat3(ndim, nobs, fdata.data());
+    knncolle_annoy::AnnoyBuilder<int, float, double, Annoy::Euclidean> builder3;
+    auto bptr3 = builder3.build_unique(mat3);
+    auto bsptr3 = bptr3->initialize();
+
+    // NO mismatch between Distance_ and AnnoyData_.
+    knncolle_annoy::AnnoyBuilder<int, double, float, Annoy::Euclidean> builder4;
+    auto bptr4 = builder4.build_unique(mat);
+    auto bsptr4 = bptr4->initialize();
+
     std::vector<int> ires, ires0;
-    std::vector<size_t> ires2, ires20;
+    std::vector<size_t> ires2;
+    std::vector<int> ires3, ires4;
     std::vector<double> dres, dres0;
-    std::vector<float> dres2, dres20;
+    std::vector<double> dres2, dres3;
+    std::vector<float> dres4;
 
     std::mt19937_64 rng(ndim * 10 + nobs - k);
     std::vector<double> query(ndim);
@@ -188,20 +233,30 @@ TEST_P(AnnoyTest, QueryEuclidean) {
         EXPECT_EQ(ires, ires0);
 
         // Checking the different types.
-        std::copy(query.begin(), query.end(), fquery.begin());
-        bsptr2->search(fquery.data(), k, &ires2, &dres2);
+        bsptr2->search(query.data(), k, &ires2, &dres2);
         EXPECT_EQ(ires.size(), ires2.size());
         EXPECT_EQ(ires.size(), dres2.size());
-
         for (size_t j = 0; j < ires.size(); ++j) {
             EXPECT_EQ(ires[j], ires2[j]);
             EXPECT_FLOAT_EQ(dres[j], dres2[j]);
         }
 
-        bsptr2->search(fquery.data(), k, NULL, &dres20);
-        EXPECT_EQ(dres2, dres20);
-        bsptr2->search(fquery.data(), k, &ires20, NULL);
-        EXPECT_EQ(ires2, ires20);
+        std::copy(query.begin(), query.end(), fquery.begin());
+        bsptr3->search(fquery.data(), k, &ires3, &dres3);
+        EXPECT_EQ(ires.size(), ires3.size());
+        EXPECT_EQ(ires.size(), dres3.size());
+        for (size_t j = 0; j < ires.size(); ++j) {
+            EXPECT_EQ(ires[j], ires3[j]);
+            EXPECT_FLOAT_EQ(dres[j], dres3[j]);
+        }
+
+        bsptr4->search(query.data(), k, &ires4, &dres4);
+        EXPECT_EQ(ires.size(), ires4.size());
+        EXPECT_EQ(ires.size(), dres4.size());
+        for (size_t j = 0; j < ires.size(); ++j) {
+            EXPECT_EQ(ires[j], ires4[j]);
+            EXPECT_FLOAT_EQ(dres[j], dres4[j]);
+        }
     }
 }
 
@@ -223,7 +278,7 @@ TEST(Annoy, Constructor) {
     EXPECT_NE(opt.num_trees, 100);
     opt.num_trees = 100;
 
-    knncolle_annoy::AnnoyBuilder<> ab(opt);
+    knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Euclidean> ab(opt);
     auto& an_opt = ab.get_options();
     EXPECT_EQ(an_opt.num_trees, 100);
 
@@ -240,11 +295,11 @@ public:
 };
 
 TEST_F(AnnoyMiscTest, SearchMult) {
-    knncolle_annoy::AnnoyBuilder<> ab;
+    knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Euclidean> ab;
     auto& an_opt = ab.get_options();
     an_opt.search_mult = 20;
 
-    knncolle::SimpleMatrix<int, int, double> mat(ndim, nobs, data.data());
+    knncolle::SimpleMatrix<int, double> mat(ndim, nobs, data.data());
     auto ptr = ab.build_unique(mat);
     auto sptr = ptr->initialize();
 
@@ -261,47 +316,37 @@ TEST(Annoy, Duplicates) {
     int ndim = 5;
     int nobs = 100;
     std::vector<double> data(ndim * nobs);
-    knncolle::SimpleMatrix<int, int, double> mat(ndim, nobs, data.data());
 
-    {
-        knncolle_annoy::AnnoyBuilder<Annoy::Euclidean, decltype(mat)> builder; 
-        auto ptr = builder.build_unique(mat);
-        auto sptr = ptr->initialize();
+    knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Euclidean> builder; 
+    auto ptr = builder.build_unique(knncolle::SimpleMatrix<int, double>(ndim, nobs, data.data()));
+    auto sptr = ptr->initialize();
+    std::vector<int> ires;
+    std::vector<double> dres;
 
-        std::vector<int> ires;
-        std::vector<double> dres;
-
-        for (int x = 0; x < nobs; ++x) {
-            sptr->search(x, 10, &ires, &dres);
-            EXPECT_EQ(ires.size(), 10);
-            for (const auto& ix : ires) { // self is not in there.
-                EXPECT_TRUE(ix != x);
-            }
-
-            EXPECT_EQ(dres.back(), 0);
-            EXPECT_EQ(dres.front(), 0);
-        }
-    }
-
-    // Same for another type in the interface, which causes us to use
+    // By default, AnnoyIndex_ == Index_ and AnnoyData_ != Distance_. So we
+    // also test AnnoyIndex_ != Index_ and AnnoyData_ == Distance_, which uses
     // slightly different code for removing the extra observation.
-    {
-        knncolle_annoy::AnnoyBuilder<Annoy::Euclidean, decltype(mat), float> builder; 
-        auto ptr = builder.build_unique(mat);
-        auto sptr = ptr->initialize();
+    knncolle_annoy::AnnoyBuilder<size_t, double, float, Annoy::Euclidean, int, float> builder2; 
+    auto ptr2 = builder2.build_unique(knncolle::SimpleMatrix<size_t, double>(ndim, nobs, data.data()));
+    auto sptr2 = ptr2->initialize();
+    std::vector<size_t> ires2;
+    std::vector<float> dres2;
 
-        std::vector<int> ires;
-        std::vector<float> dres;
-
-        for (int x = 0; x < nobs; ++x) {
-            sptr->search(x, 10, &ires, &dres);
-            EXPECT_EQ(ires.size(), 10);
-            for (const auto& ix : ires) { // self is not in there.
-                EXPECT_TRUE(ix != x);
-            }
-
-            EXPECT_EQ(dres.back(), 0);
-            EXPECT_EQ(dres.front(), 0);
+    for (int x = 0; x < nobs; ++x) {
+        sptr->search(x, 10, &ires, &dres);
+        EXPECT_EQ(ires.size(), 10);
+        for (const auto& ix : ires) { // self is not in there.
+            EXPECT_TRUE(ix != x);
         }
+        EXPECT_EQ(dres.back(), 0);
+        EXPECT_EQ(dres.front(), 0);
+
+        sptr2->search(x, 10, &ires2, &dres2);
+        EXPECT_EQ(ires2.size(), 10);
+        for (const auto& ix : ires2) { // self is not in there.
+            EXPECT_NE(ix, x);
+        }
+        EXPECT_EQ(dres2.back(), 0);
+        EXPECT_EQ(dres2.front(), 0);
     }
 }

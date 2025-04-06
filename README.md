@@ -17,42 +17,80 @@ Instances of the various `knncolle_annoy::Annoy*` classes can be used anywhere t
 For example:
 
 ```cpp
-#include "knncolle/knncolle_annoy.hpp"
+#include "knncolle_annoy/knncolle_annoy.hpp"
+
+int ndim = 10;
+int nobs = 10000;
+std::vector<double> matrix(ndim * nobs); // column-major ndim * nobs matrix.
 
 // Wrap our data in a light SimpleMatrix.
-knncolle::SimpleMatrix<int, int, double> mat(ndim, nobs, matrix.data());
+knncolle::SimpleMatrix<int, double> mat(ndim, nobs, matrix.data());
 
-// Build an Annoy index. 
-knncolle_annoy::AnnoyBuilder<Annoy::Euclidean> an_builder;
+// Build an Annoy index with Euclidean distances. 
+knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Euclidean> an_builder;
 auto an_index = an_builder.build_unique(mat);
 
 // Find 10 (approximate) nearest neighbors of every element.
 auto results = knncolle::find_nearest_neighbors(*an_index, 10); 
 ```
 
-We could alternate between exact and approximate searches at run-time:
+Check out the [reference documentation](https://knncolle.github.io/knncolle_annoy/) for more details.
 
-```cpp
-std::unique_ptr<knncolle::Prebuilt<int, int, double> > ptr;
-if (use_exact) {
-    knncolle::KmknnBuilder<> kbuilder;
-    ptr = kbuilder.build_unique(mat);
-} else {
-    knncolle_annoy::AnnoyBuilder<> abuilder;
-    ptr = abuilder.build_unique(mat);
-}
-```
+## Customizing the search
 
-We can also customize the construction of the `AnnoyBuilder` by passing in options:
+We can pass options to the `AnnoyBuilder` constructor:
 
 ```cpp
 knncolle_annoy::AnnoyOptions an_opts;
 an_opts.num_trees = 100;
 an_opts.search_mult = 200; // used to compute search_k.
-knncolle_annoy::AnnoyBuilder<> an_builder2(an_opts);
+knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Euclidean> an_builder2(an_opts);
 ```
 
-Check out the [reference documentation](https://knncolle.github.io/knncolle_annoy/) for more details.
+We could also modify the builder after construction:
+
+```cpp
+auto& opt = an_builder.get_options()
+opt.num_trees = 100;
+```
+
+Advanced users can configure the template parameters to use more suitable types for their applications.
+A hypothetical configuration is shown below with (mostly made up) reasons:
+
+```cpp
+typedef knncolle_annoy::AnnoyBuilder<
+    // The type for the observation indices - perhaps int isn't big enough to
+    // hold all the indices for a large dataset, so we'll use size_t.
+    size_t,
+
+    // The type for the input data, maybe we're dealing with small counts.
+    uint8_t,
+
+    // The type for the distances, maybe we'll use floats to save space.
+    float,
+
+    // The type of distance, Euclidean is so 200 BC.
+    Annoy::Manhattan,
+
+    // The type of index used internally by Annoy, guess we'll continue
+    // using size_t if int wasn't big enough for us.
+    size_t,
+
+    // The type of data/distance used internally by Annoy, let's use
+    // float for performance.
+    float,
+
+    // The PRNG used by Annoy, we'll stick with the default.
+    Annoy::Kiss64Random,
+
+    // The thread policy used by Annoy. I suppose we could use multi-threading.
+    Annoy::AnnoyIndexSingleThreadedBuildPolicy,
+
+    // The type of matrix that the AnnoyBuilder takes as input: forcing it
+    // to be a SimpleMatrix to enable devirtualization.
+    knncolle::SimpleMatrix<size_t, uint8_t>
+> MyAnnoyBuilder;
+```
 
 ## Building projects 
 
@@ -64,7 +102,7 @@ If you're using CMake, you just need to add something like this to your `CMakeLi
 include(FetchContent)
 
 FetchContent_Declare(
-  knncolle
+  knncolle_annoy
   GIT_REPOSITORY https://github.com/knncolle/knncolle_annoy
   GIT_TAG master # or any version of interest
 )
@@ -99,12 +137,12 @@ cmake --build . --target install
 
 By default, this will use `FetchContent` to fetch all external dependencies.
 If you want to install them manually, use `-DKNNCOLLE_ANNOY_FETCH_EXTERN=OFF`.
-See [`extern/CMakeLists.txt`](extern/CMakeLists.txt) to find compatible versions of each dependency.
+See [`extern/CMakeLists.txt`](extern/CMakeLists.txt) for compatible versions of each dependency.
 
 ### Manual
 
 If you're not using CMake, the simple approach is to just copy the files in `include/` - either directly or with Git submodules - and include their path during compilation with, e.g., GCC's `-I`.
-This requires the external dependencies listed in [`extern/CMakeLists.txt`](extern/CMakeLists.txt), which also need to be made available during compilation.
+See [`extern/CMakeLists.txt`](extern/CMakeLists.txt) for compatible versions of each dependency.
 
 ## Note on vectorization
 
