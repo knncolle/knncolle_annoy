@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
-<tagfile doxygen_version="1.9.8">
+<tagfile doxygen_version="1.12.0">
   <compound kind="file">
     <name>knncolle_annoy.hpp</name>
     <path>/github/workspace/include/knncolle_annoy/</path>
@@ -13,38 +13,42 @@
   <compound kind="class">
     <name>knncolle_annoy::AnnoyBuilder</name>
     <filename>classknncolle__annoy_1_1AnnoyBuilder.html</filename>
-    <templarg>class Distance_</templarg>
+    <templarg>typename Index_</templarg>
+    <templarg>typename Data_</templarg>
+    <templarg>typename Distance_</templarg>
+    <templarg>class AnnoyDistance_</templarg>
+    <templarg>typename AnnoyIndex_</templarg>
+    <templarg>typename AnnoyData_</templarg>
+    <templarg>class AnnoyRng_</templarg>
+    <templarg>class AnnoyThreadPolicy_</templarg>
     <templarg>class Matrix_</templarg>
-    <templarg>typename Float_</templarg>
-    <templarg>typename InternalIndex_</templarg>
-    <templarg>typename InternalData_</templarg>
-    <base>knncolle::Builder</base>
+    <base>knncolle::Builder&lt; typename Index_, typename Data_, typename Distance_, class Matrix_ &gt;</base>
     <member kind="function">
       <type></type>
       <name>AnnoyBuilder</name>
       <anchorfile>classknncolle__annoy_1_1AnnoyBuilder.html</anchorfile>
-      <anchor>a20f4ce2cddda3dd050e76d27f62a0332</anchor>
+      <anchor>a3af65d7b88c5b9801d06c5fc2ceb8a75</anchor>
       <arglist>(AnnoyOptions options)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>AnnoyBuilder</name>
       <anchorfile>classknncolle__annoy_1_1AnnoyBuilder.html</anchorfile>
-      <anchor>a326d9025842012fa999d3e0da9124bfd</anchor>
+      <anchor>a7e5b30a68c3c208104b769b02cb446c7</anchor>
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
       <type>AnnoyOptions &amp;</type>
       <name>get_options</name>
       <anchorfile>classknncolle__annoy_1_1AnnoyBuilder.html</anchorfile>
-      <anchor>aaa5e91bcc90bcc5dfa6150724d4b8af7</anchor>
+      <anchor>a45abac40b562d4aa23e89b0eae298dd0</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>knncolle::Prebuilt&lt; typename Matrix_::dimension_type, typename Matrix_::index_type, Float_ &gt; *</type>
+      <type>knncolle::Prebuilt&lt; Index_, Data_, Distance_ &gt; *</type>
       <name>build_raw</name>
       <anchorfile>classknncolle__annoy_1_1AnnoyBuilder.html</anchorfile>
-      <anchor>ac7eb10e0d4ce881ba44c001558338286</anchor>
+      <anchor>a60c62ec5f4fdf5252169de7400b97871</anchor>
       <arglist>(const Matrix_ &amp;data) const</arglist>
     </member>
   </compound>
@@ -69,59 +73,35 @@
   <compound kind="class">
     <name>knncolle_annoy::AnnoyPrebuilt</name>
     <filename>classknncolle__annoy_1_1AnnoyPrebuilt.html</filename>
-    <templarg>class Distance_</templarg>
-    <templarg>typename Dim_</templarg>
     <templarg>typename Index_</templarg>
-    <templarg>typename Float_</templarg>
-    <templarg>typename InternalIndex_</templarg>
-    <templarg>typename InternalData_</templarg>
-    <base>Prebuilt&lt; Dim_, Index_, Float_ &gt;</base>
+    <templarg>typename Data_</templarg>
+    <templarg>typename Distance_</templarg>
+    <templarg>class AnnoyDistance_</templarg>
+    <templarg>typename AnnoyIndex_</templarg>
+    <templarg>typename AnnoyData_</templarg>
+    <templarg>class AnnoyRng_</templarg>
+    <templarg>class AnnoyThreadPolicy_</templarg>
+    <base>knncolle::Prebuilt&lt; Index_, Data_, Distance_ &gt;</base>
     <member kind="function">
-      <type>Dim_</type>
-      <name>num_dimensions</name>
-      <anchorfile>classknncolle__annoy_1_1AnnoyPrebuilt.html</anchorfile>
-      <anchor>a867140a8569539500e60e1d32aa3d3b2</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>Index_</type>
-      <name>num_observations</name>
-      <anchorfile>classknncolle__annoy_1_1AnnoyPrebuilt.html</anchorfile>
-      <anchor>a5f8c8f46151fba43dc767e96587bc349</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>std::unique_ptr&lt; knncolle::Searcher&lt; Index_, Float_ &gt; &gt;</type>
+      <type>std::unique_ptr&lt; knncolle::Searcher&lt; Index_, Data_, Distance_ &gt; &gt;</type>
       <name>initialize</name>
       <anchorfile>classknncolle__annoy_1_1AnnoyPrebuilt.html</anchorfile>
-      <anchor>aec80499e4874bd30f8aa58a3f2251018</anchor>
+      <anchor>a2a92789ec49711ac6852a721e396e105</anchor>
       <arglist>() const</arglist>
     </member>
   </compound>
   <compound kind="class">
     <name>knncolle_annoy::AnnoySearcher</name>
     <filename>classknncolle__annoy_1_1AnnoySearcher.html</filename>
-    <templarg>class Distance_</templarg>
-    <templarg>typename Dim_</templarg>
     <templarg>typename Index_</templarg>
-    <templarg>typename Float_</templarg>
-    <templarg>typename InternalIndex_</templarg>
-    <templarg>typename InternalData_</templarg>
-    <base>Searcher&lt; Index_, Float_ &gt;</base>
-    <member kind="function">
-      <type>void</type>
-      <name>search</name>
-      <anchorfile>classknncolle__annoy_1_1AnnoySearcher.html</anchorfile>
-      <anchor>a3a588b6bea8c42116a27adb9212efe6f</anchor>
-      <arglist>(Index_ i, Index_ k, std::vector&lt; Index_ &gt; *output_indices, std::vector&lt; Float_ &gt; *output_distances)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>search</name>
-      <anchorfile>classknncolle__annoy_1_1AnnoySearcher.html</anchorfile>
-      <anchor>a6d59ec98dc05ada3cbb6ebe13b9b0caa</anchor>
-      <arglist>(const Float_ *query, Index_ k, std::vector&lt; Index_ &gt; *output_indices, std::vector&lt; Float_ &gt; *output_distances)</arglist>
-    </member>
+    <templarg>typename Data_</templarg>
+    <templarg>typename Distance_</templarg>
+    <templarg>class AnnoyDistance_</templarg>
+    <templarg>typename AnnoyIndex_</templarg>
+    <templarg>typename AnnoyData_</templarg>
+    <templarg>class AnnoyRng_</templarg>
+    <templarg>class AnnoyThreadPolicy_</templarg>
+    <base>knncolle::Searcher&lt; Index_, Data_, Distance_ &gt;</base>
   </compound>
   <compound kind="namespace">
     <name>knncolle_annoy</name>

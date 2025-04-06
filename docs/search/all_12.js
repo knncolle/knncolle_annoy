@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['vectorization_0',['Note on vectorization',['../index.html#autotoc_md7',1,'']]],
+  ['vectorization_0',['Note on vectorization',['../index.html#autotoc_md8',1,'']]],
   ['vptree_2ehpp_1',['Vptree.hpp',['https://knncolle.github.io/knncolle/Vptree_8hpp.html',1,'']]],
-  ['vptreebuilder_2',['VptreeBuilder',['https://knncolle.github.io/knncolle/classknncolle_1_1VptreeBuilder.html',1,'knncolle']]],
-  ['vptreeprebuilt_3',['vptreeprebuilt',['https://knncolle.github.io/knncolle/classknncolle_1_1VptreePrebuilt.html',1,'knncolle::VptreePrebuilt&lt; class Distance_, typename Dim_, typename Index_, typename Store_, typename Float_ &gt;'],['https://knncolle.github.io/knncolle/classknncolle_1_1VptreePrebuilt.html#a5391976fe1e6b957181229a8590a6ca3',1,'knncolle::VptreePrebuilt::VptreePrebuilt()']]],
+  ['vptreebuilder_2',['VptreeBuilder',['https://knncolle.github.io/knncolle/classknncolle_1_1VptreeBuilder.html',1,'knncolle::VptreeBuilder&lt; typename Index_, typename Data_, typename Distance_, class Matrix_, class DistanceMetric_ &gt;'],['https://knncolle.github.io/knncolle/classknncolle_1_1VptreeBuilder.html#a13f00af67d227d117fa4b9910861a438',1,'knncolle::VptreeBuilder::VptreeBuilder(std::shared_ptr&lt; const DistanceMetric_ &gt; metric)'],['https://knncolle.github.io/knncolle/classknncolle_1_1VptreeBuilder.html#a29abc6777bdd31820ef66a6ee518a8aa',1,'knncolle::VptreeBuilder::VptreeBuilder(const DistanceMetric_ *metric)']]],
+  ['vptreeprebuilt_3',['VptreePrebuilt',['https://knncolle.github.io/knncolle/classknncolle_1_1VptreePrebuilt.html',1,'knncolle']]],
   ['vptreesearcher_4',['VptreeSearcher',['https://knncolle.github.io/knncolle/classknncolle_1_1VptreeSearcher.html',1,'knncolle']]]
 ];
