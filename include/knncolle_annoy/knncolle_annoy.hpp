@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <algorithm>
 #include <memory>
+#include <cstddef>
 
 #include "knncolle/knncolle.hpp"
 #include "annoy/annoylib.h"
@@ -128,7 +129,7 @@ private:
     }
 
     template<typename Type_>
-    static void remove_self(std::vector<Type_>& vec, size_t at) {
+    static void remove_self(std::vector<Type_>& vec, std::size_t at) {
         if (at < vec.size()) {
             vec.erase(vec.begin() + at);
         } else {
@@ -137,9 +138,9 @@ private:
     }
 
     template<typename Source_, typename Dest_>
-    static void copy_skip_self(const std::vector<Source_>& source, std::vector<Dest_>& dest, size_t at) {
+    static void copy_skip_self(const std::vector<Source_>& source, std::vector<Dest_>& dest, std::size_t at) {
         auto sIt = source.begin();
-        size_t end = source.size();
+        auto end = source.size();
         dest.clear();
         dest.reserve(end - 1);
 
@@ -165,12 +166,12 @@ public:
 
         my_parent.my_index.get_nns_by_item(i, kp1, get_search_k(kp1), icopy_ptr, dcopy_ptr);
 
-        size_t at;
+        std::size_t at;
         {
             const auto& cur_i = *icopy_ptr;
             at = cur_i.size();
             AnnoyIndex_ icopy = i;
-            for (size_t x = 0, end = cur_i.size(); x < end; ++x) {
+            for (std::size_t x = 0, end = cur_i.size(); x < end; ++x) {
                 if (cur_i[x] == icopy) {
                     at = x;
                     break;
@@ -290,7 +291,7 @@ public:
      */
 
 private:
-    size_t my_dim;
+    std::size_t my_dim;
     Index_ my_obs;
     double my_search_mult;
     Annoy::AnnoyIndex<AnnoyIndex_, AnnoyData_, AnnoyDistance_, AnnoyRng_, AnnoyThreadPolicy_> my_index;
@@ -298,7 +299,7 @@ private:
     friend class AnnoySearcher<Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_>;
 
 public:
-    size_t num_dimensions() const {
+    std::size_t num_dimensions() const {
         return my_dim;
     }
 
