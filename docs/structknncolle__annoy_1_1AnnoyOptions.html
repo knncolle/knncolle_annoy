@@ -138,7 +138,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Factor that is multiplied by the number of neighbors <code>k</code> to determine the number of nodes to search in <code>find_nearest_neighbors()</code>. Larger values improve accuracy at the cost of runtime, see <a href="https://github.com/spotify/annoy#tradeoffs">here</a> for details. If set to -1, it defaults to <code>num_trees</code>. </p>
+<p>Factor that is multiplied by the number of neighbors <code>k</code> to determine the number of nodes to search in <code>AnnoySearcher::search()</code>. Larger values improve accuracy at the cost of runtime, see <a href="https://github.com/spotify/annoy#tradeoffs">here</a> for details. This should be greater than or equal to 1 - any other value will be replaced by <code>num_trees</code>. </p>
 
 </div>
 </div>
