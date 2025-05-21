@@ -33,9 +33,9 @@ struct AnnoyOptions {
     int num_trees = 50;
 
     /**
-     * Factor that is multiplied by the number of neighbors `k` to determine the number of nodes to search in `find_nearest_neighbors()`.
+     * Factor that is multiplied by the number of neighbors `k` to determine the number of nodes to search in `AnnoySearcher::search()`.
      * Larger values improve accuracy at the cost of runtime, see [here](https://github.com/spotify/annoy#tradeoffs) for details.
-     * If set to -1, it defaults to `num_trees`.
+     * This should be greater than or equal to 1 - any other value will be replaced by `num_trees`.
      */
     double search_mult = -1;
 };
@@ -83,8 +83,8 @@ private:
     typename std::conditional<!same_internal_distance, std::vector<AnnoyData_>, bool>::type my_distances;
 
     int get_search_k(int k) const {
-        if (my_parent.my_search_mult < 0) {
-            return -1;
+        if (my_parent.my_search_mult < 1) {
+            return -1; // instructs Annoy to use k * num_trees. 
         } else {
             return my_parent.my_search_mult * static_cast<double>(k) + 0.5; // rounded.
         }
