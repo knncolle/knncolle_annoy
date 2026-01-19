@@ -303,7 +303,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        my_search_mult(options.search_mult),</div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        my_index(my_dim)</div>
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    {</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        <span class="keyword">auto</span> work = data.new_extractor();</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        <span class="keyword">auto</span> work = data.new_known_extractor();</div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same&lt;Data_, AnnoyData_&gt;::value) {</div>
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>            <span class="keywordflow">for</span> (Index_ i = 0; i &lt; my_obs; ++i) {</div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                <span class="keyword">auto</span> ptr = work-&gt;next();</div>
