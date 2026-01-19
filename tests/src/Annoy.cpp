@@ -158,7 +158,7 @@ TEST_P(AnnoyTest, FindManhattan) {
 
     knncolle::SimpleMatrix<int, double> mat(ndim, nobs, data.data());
     knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Manhattan> builder;
-    auto bptr = builder.build_unique(mat);
+    auto bptr = builder.build_shared(mat); // make a shared pointer for some variety.
     auto bsptr = bptr->initialize();
 
     knncolle::ManhattanDistance<double, double> mandist;
@@ -186,7 +186,7 @@ TEST_P(AnnoyTest, QueryEuclidean) {
 
     knncolle::SimpleMatrix<int, double> mat(ndim, nobs, data.data());
     knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Euclidean> builder;
-    auto bptr = builder.build_unique(mat);
+    auto bptr = builder.build_known_unique(mat); // test coverage for the known override.
     auto bsptr = bptr->initialize();
 
     // Trying with different types; mismatch between Index_ and AnnoyIndex_.
@@ -300,7 +300,7 @@ TEST_F(AnnoyMiscTest, SearchMult) {
     an_opt.search_mult = 20;
 
     knncolle::SimpleMatrix<int, double> mat(ndim, nobs, data.data());
-    auto ptr = ab.build_unique(mat);
+    auto ptr = ab.build_known_shared(mat); // test coverage for the known override.
     auto sptr = ptr->initialize();
 
     std::vector<int> ires;
