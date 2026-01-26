@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['get_5foptions_0',['get_options',['../classknncolle__annoy_1_1AnnoyBuilder.html#a45abac40b562d4aa23e89b0eae298dd0',1,'knncolle_annoy::AnnoyBuilder']]]
+  ['get_5fdistance_5fname_0',['get_distance_name',['../namespaceknncolle__annoy.html#a0f46fd7ab22d7976baec00c98c038bea',1,'knncolle_annoy']]],
+  ['get_5fnumeric_5ftype_1',['get_numeric_type',['../namespaceknncolle__annoy.html#a5a77303e4f9434ddc0218aa14b19f1fb',1,'knncolle_annoy']]],
+  ['get_5foptions_2',['get_options',['../classknncolle__annoy_1_1AnnoyBuilder.html#a45abac40b562d4aa23e89b0eae298dd0',1,'knncolle_annoy::AnnoyBuilder']]]
 ];

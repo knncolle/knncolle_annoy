@@ -87,7 +87,9 @@ $(function(){ initResizable(false); });
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">knncolle_annoy Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -103,10 +105,214 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structknncolle__annoy_1_1AnnoyOptions.html">AnnoyOptions</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code>AnnoyBuilder()</code>.  <a href="structknncolle__annoy_1_1AnnoyOptions.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structknncolle__annoy_1_1PrebuiltSaveConfig.html">PrebuiltSaveConfig</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration of a saved Annoy index.  <a href="structknncolle__annoy_1_1PrebuiltSaveConfig.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ab5b68f6564b16322f9b231b4548ecd0c" id="r_ab5b68f6564b16322f9b231b4548ecd0c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5b68f6564b16322f9b231b4548ecd0c">NumericType</a> : char { <br />
+&#160;&#160;<b>UINT8_T</b>
+, <b>INT8_T</b>
+, <b>UINT16_T</b>
+, <b>INT16_T</b>
+, <br />
+&#160;&#160;<b>UINT32_T</b>
+, <b>INT32_T</b>
+, <b>UINT64_T</b>
+, <b>INT64_T</b>
+, <br />
+&#160;&#160;<b>UNSIGNED_CHAR</b>
+, <b>SIGNED_CHAR</b>
+, <b>CHAR</b>
+, <b>UNSIGNED_SHORT</b>
+, <br />
+&#160;&#160;<b>SHORT</b>
+, <b>UNSIGNED_INT</b>
+, <b>INT</b>
+, <b>UNSIGNED_LONG</b>
+, <br />
+&#160;&#160;<b>LONG</b>
+, <b>UNSIGNED_LONG_LONG</b>
+, <b>LONG_LONG</b>
+, <b>SIZE_T</b>
+, <br />
+&#160;&#160;<b>PTRDIFF_T</b>
+, <b>FLOAT</b>
+, <b>DOUBLE</b>
+, <b>UNKNOWN</b>
+<br />
+ }</td></tr>
+<tr class="separator:ab5b68f6564b16322f9b231b4548ecd0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a480d8350b6c83729f140253ee3ca64cb" id="r_a480d8350b6c83729f140253ee3ca64cb"><td class="memTemplParams" colspan="2">template&lt;typename Index_ , typename Data_ , typename Distance_ , class AnnoyDistance_ , typename AnnoyIndex_  = Index_, typename AnnoyData_  = float, class AnnoyRng_  = Annoy::Kiss64Random, class AnnoyThreadPolicy_  = Annoy::AnnoyIndexSingleThreadedBuildPolicy&gt; </td></tr>
+<tr class="memitem:a480d8350b6c83729f140253ee3ca64cb"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a480d8350b6c83729f140253ee3ca64cb">load_annoy_prebuilt</a> (const std::string &amp;prefix)</td></tr>
+<tr class="separator:a480d8350b6c83729f140253ee3ca64cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f46fd7ab22d7976baec00c98c038bea" id="r_a0f46fd7ab22d7976baec00c98c038bea"><td class="memTemplParams" colspan="2">template&lt;typename AnnoyDistance_ &gt; </td></tr>
+<tr class="memitem:a0f46fd7ab22d7976baec00c98c038bea"><td class="memTemplItemLeft" align="right" valign="top">const char *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a0f46fd7ab22d7976baec00c98c038bea">get_distance_name</a> ()</td></tr>
+<tr class="separator:a0f46fd7ab22d7976baec00c98c038bea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a77303e4f9434ddc0218aa14b19f1fb" id="r_a5a77303e4f9434ddc0218aa14b19f1fb"><td class="memTemplParams" colspan="2">template&lt;typename Type_ &gt; </td></tr>
+<tr class="memitem:a5a77303e4f9434ddc0218aa14b19f1fb"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="#ab5b68f6564b16322f9b231b4548ecd0c">NumericType</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a5a77303e4f9434ddc0218aa14b19f1fb">get_numeric_type</a> ()</td></tr>
+<tr class="separator:a5a77303e4f9434ddc0218aa14b19f1fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50ce8ca5c3c5ae8fa68bc34a67f092d9" id="r_a50ce8ca5c3c5ae8fa68bc34a67f092d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structknncolle__annoy_1_1PrebuiltSaveConfig.html">PrebuiltSaveConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50ce8ca5c3c5ae8fa68bc34a67f092d9">scan_prebuilt_save_config</a> (const std::string &amp;prefix)</td></tr>
+<tr class="separator:a50ce8ca5c3c5ae8fa68bc34a67f092d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Approximate nearest neighbor search with Annoy. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="ab5b68f6564b16322f9b231b4548ecd0c" name="ab5b68f6564b16322f9b231b4548ecd0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5b68f6564b16322f9b231b4548ecd0c">&#9670;&#160;</a></span>NumericType</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#ab5b68f6564b16322f9b231b4548ecd0c">knncolle_annoy::NumericType</a> : char</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Numeric types for <code>AnnoyIndex_</code> and <code>AnnoyData_</code> template parameters of <code><a class="el" href="classknncolle__annoy_1_1AnnoyBuilder.html" title="Perform an approximate nearest neighbor search with Annoy.">AnnoyBuilder</a></code>. These are typically set by <code><a class="el" href="#a5a77303e4f9434ddc0218aa14b19f1fb">get_numeric_type()</a></code>. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a0f46fd7ab22d7976baec00c98c038bea" name="a0f46fd7ab22d7976baec00c98c038bea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f46fd7ab22d7976baec00c98c038bea">&#9670;&#160;</a></span>get_distance_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename AnnoyDistance_ &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * knncolle_annoy::get_distance_name </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">AnnoyDistance_</td><td>An <b>Annoy</b>-compatible class to compute the distance between vectors, as used in <code>AnnoyBuilder()</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Name of the distance metric, e.g., <code>"euclidean"</code>, <code>"manhattan"</code>. This is taken from <code>AnnoyDistance_::name()</code> if such a method exists, otherwise <code>"unknown"</code> is returned. </dd></dl>
+
+</div>
+</div>
+<a id="a5a77303e4f9434ddc0218aa14b19f1fb" name="a5a77303e4f9434ddc0218aa14b19f1fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a77303e4f9434ddc0218aa14b19f1fb">&#9670;&#160;</a></span>get_numeric_type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Type_ &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#ab5b68f6564b16322f9b231b4548ecd0c">NumericType</a> knncolle_annoy::get_numeric_type </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Type_</td><td>Some integer or floating-point type, typically used as <code>AnnoyIndex_</code> or <code>AnnoyData_</code> in <code>AnnoyBuilder()</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Identity of the numeric type. </dd></dl>
+
+</div>
+</div>
+<a id="a480d8350b6c83729f140253ee3ca64cb" name="a480d8350b6c83729f140253ee3ca64cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a480d8350b6c83729f140253ee3ca64cb">&#9670;&#160;</a></span>load_annoy_prebuilt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Index_ , typename Data_ , typename Distance_ , class AnnoyDistance_ , typename AnnoyIndex_  = Index_, typename AnnoyData_  = float, class AnnoyRng_  = Annoy::Kiss64Random, class AnnoyThreadPolicy_  = Annoy::AnnoyIndexSingleThreadedBuildPolicy&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto knncolle_annoy::load_annoy_prebuilt </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>prefix</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Helper function to define a <code><a class="elRef" href="https://knncolle.github.io/knncolle/namespaceknncolle.html#af5bf682899b815f8e1d4a4c6ef80408a">knncolle::LoadPrebuiltFunction</a></code> for Annoy in <code>knncolle::load_prebuilt()</code>.</p>
+<p>In an Annoy-specific <code><a class="elRef" href="https://knncolle.github.io/knncolle/namespaceknncolle.html#af5bf682899b815f8e1d4a4c6ef80408a">knncolle::LoadPrebuiltFunction</a></code>, users should first call <code><a class="el" href="#a50ce8ca5c3c5ae8fa68bc34a67f092d9">scan_prebuilt_save_config()</a></code> to figure out the saved index's <code>AnnoyDistance_</code>, <code>AnnoyIndex</code> and <code>AnnoyData_</code>. Then, they can call <code><a class="el" href="#a480d8350b6c83729f140253ee3ca64cb">load_annoy_prebuilt()</a></code> with the specified types to return a pointer to a <code><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html">knncolle::Prebuilt</a></code> object. This can be registered in <code>load_prebuilt_registry()</code> with the key in <code>knncolle_annoy::save_name</code>.</p>
+<p>We do not automatically register a function as the user is responsible for deciding what types should be handled. This avoids binary bloat from repeated instantiations of the Annoy template classes for every possible combination of types. Instead, the user chooses which combinations of types can be loaded, e.g., if their application only deals with those combinations. Users may also have more information to handle unknown types from <code><a class="el" href="#a5a77303e4f9434ddc0218aa14b19f1fb">get_numeric_type()</a></code> or unknown distances from <code><a class="el" href="#a0f46fd7ab22d7976baec00c98c038bea">get_distance_name()</a></code>.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Index_</td><td>Integer type for the observation indices. </td></tr>
+    <tr><td class="paramname">Data_</td><td>Numeric type for the input and query data. </td></tr>
+    <tr><td class="paramname">Distance_</td><td>Floating-point type for the distances. </td></tr>
+    <tr><td class="paramname">AnnoyDistance_</td><td>An <b>Annoy</b>-compatible class to compute the distance between vectors. This should be the same as the distance reported in <code><a class="el" href="structknncolle__annoy_1_1PrebuiltSaveConfig.html#a509ca03b8cb13c972f16d4b82f8e547e">PrebuiltSaveConfig::distance</a></code>. </td></tr>
+    <tr><td class="paramname">AnnoyIndex_</td><td>Integer type for the observation indices in the Annoy index. This should be the same as the type reported by <code><a class="el" href="structknncolle__annoy_1_1PrebuiltSaveConfig.html#a28f36ec21f626ad20b19368475240d73">PrebuiltSaveConfig::index</a></code>. </td></tr>
+    <tr><td class="paramname">AnnoyData_</td><td>Floating-point type for data in the Annoy index. This should be the same as the type reported by <code><a class="el" href="structknncolle__annoy_1_1PrebuiltSaveConfig.html#a7504e43b372b437bc1940397bf550086">PrebuiltSaveConfig::data</a></code>. </td></tr>
+    <tr><td class="paramname">AnnoyRng_</td><td>An <b>Annoy</b> class for random number generation. This is provided for completeness and has no effect as the index is already built. </td></tr>
+    <tr><td class="paramname">AnnoyThreadPolicy_</td><td>An <b>Annoy</b> class for the threadedness of Annoy index building. This is provided for completeness and has no effect as the index is already built.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">prefix</td><td>Prefix of the file paths in which a prebuilt Annoy index was saved. An Annoy index is typically saved by calling the <code><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html#a87930f878bf3a22297b851173caaf893">knncolle::Prebuilt::save()</a></code> method of the Annoy subclass instance.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to a <code><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html">knncolle::Prebuilt</a></code> Annoy index. </dd></dl>
+
+</div>
+</div>
+<a id="a50ce8ca5c3c5ae8fa68bc34a67f092d9" name="a50ce8ca5c3c5ae8fa68bc34a67f092d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50ce8ca5c3c5ae8fa68bc34a67f092d9">&#9670;&#160;</a></span>scan_prebuilt_save_config()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structknncolle__annoy_1_1PrebuiltSaveConfig.html">PrebuiltSaveConfig</a> knncolle_annoy::scan_prebuilt_save_config </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>prefix</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">prefix</td><td>Prefix of the file paths in which a prebuilt Annoy index was saved. An Annoy index is typically saved by calling the <code><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html#a87930f878bf3a22297b851173caaf893">knncolle::Prebuilt::save()</a></code> method of the Annoy subclass instance.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Configuration of the saved instance of a <code><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html">knncolle::Prebuilt</a></code> Annoy subclass. This is typically used to choose template parameters for <code><a class="el" href="#a480d8350b6c83729f140253ee3ca64cb">load_annoy_prebuilt()</a></code>. </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['num_5ftrees_0',['num_trees',['../structknncolle__annoy_1_1AnnoyOptions.html#a4acbbbebaf5b5eb0d2496faefe7ee932',1,'knncolle_annoy::AnnoyOptions']]]
+  ['data_0',['data',['../structknncolle__annoy_1_1PrebuiltSaveConfig.html#a7504e43b372b437bc1940397bf550086',1,'knncolle_annoy::PrebuiltSaveConfig']]],
+  ['distance_1',['distance',['../structknncolle__annoy_1_1PrebuiltSaveConfig.html#a509ca03b8cb13c972f16d4b82f8e547e',1,'knncolle_annoy::PrebuiltSaveConfig']]]
 ];

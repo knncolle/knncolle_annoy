@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['search_5fmult_0',['search_mult',['../structknncolle__annoy_1_1AnnoyOptions.html#a7e917640043724d3933318a4504e65a5',1,'knncolle_annoy::AnnoyOptions']]]
+  ['index_0',['index',['../structknncolle__annoy_1_1PrebuiltSaveConfig.html#a28f36ec21f626ad20b19368475240d73',1,'knncolle_annoy::PrebuiltSaveConfig']]]
 ];
