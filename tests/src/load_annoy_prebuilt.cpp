@@ -74,6 +74,37 @@ TEST_F(AnnoyLoadPrebuiltTest, Manhattan) {
     }
 }
 
+TEST_F(AnnoyLoadPrebuiltTest, Custom) {
+    auto& cust = knncolle_annoy::customize_save_for_annoy_types<Annoy::Euclidean, int, float>();
+    cust = [](const std::string& prefix) -> void {
+        knncolle::quick_save(prefix + "FOO", "bar", 3);
+    };
+
+    knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Euclidean> ab;
+    auto aptr = ab.build_unique(knncolle::SimpleMatrix<int, double>(ndim, nobs, data.data()));
+
+    const auto prefix = (savedir / "custom_").string();
+    aptr->save(prefix);
+
+    // Custom function is respected.
+    EXPECT_EQ(knncolle::quick_load_as_string(prefix + "FOO"), "bar");
+    cust = nullptr;
+
+    // Everything else is still fine.
+    auto reloaded = knncolle::load_prebuilt_shared<int, double, double>(prefix);
+    std::vector<int> output_i, output_i2;
+    std::vector<double> output_d, output_d2;
+
+    auto searcher = aptr->initialize();
+    auto researcher = reloaded->initialize();
+    for (int x = 0; x < nobs; ++x) {
+        searcher->search(x, 5, &output_i, &output_d);
+        researcher->search(x, 5, &output_i2, &output_d2);
+        EXPECT_EQ(output_i, output_i2);
+        EXPECT_EQ(output_d, output_d2);
+    }
+}
+
 TEST_F(AnnoyLoadPrebuiltTest, Error) {
     knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Manhattan> ab;
     auto aptr = ab.build_unique(knncolle::SimpleMatrix<int, double>(ndim, nobs, data.data()));

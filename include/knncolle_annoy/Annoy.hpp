@@ -336,6 +336,11 @@ public:
         const auto dname = get_distance_name<AnnoyDistance_>();
         knncolle::quick_save(prefix + "distance", dname, std::strlen(dname));
 
+        auto& cust = customize_save_for_annoy_types<AnnoyDistance_, AnnoyIndex_, AnnoyData_>();
+        if (cust) {
+            cust(prefix);
+        }
+
         // Not bothering to save anything else; the RNG and thread policy
         // should not be relevant once the index is built.
 

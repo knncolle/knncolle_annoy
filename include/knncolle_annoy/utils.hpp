@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <stdexcept>
 #include <type_traits>
+#include <functional>
 
 #include "knncolle/knncolle.hpp"
 
@@ -47,6 +48,8 @@ struct has_name<AnnoyDistance_, decltype(AnnoyDistance_::name(), 0)> {
  * @tparam AnnoyDistance_ An **Annoy**-compatible class to compute the distance between vectors, as used in `AnnoyBuilder()`.
  * @return Name of the distance metric, e.g., `"euclidean"`, `"manhattan"`.
  * This is taken from `AnnoyDistance_::name()` if such a method exists, otherwise `"unknown"` is returned.
+ *
+ * For unknown distances, consider using `customize_save_for_annoy_types()` to add more information to the on-disk representation during a `knncolle::Prebuilt::save()` call.
  */
 template<typename AnnoyDistance_> 
 const char* get_distance_name() { 
@@ -79,6 +82,8 @@ enum class NumericType : char {
 /**
  * @tparam Type_ Some integer or floating-point type, typically used as `AnnoyIndex_` or `AnnoyData_` in `AnnoyBuilder()`.
  * @return Identity of the numeric type.
+ *
+ * For unknown types, consider using `customize_save_for_annoy_types()` to add more information to the on-disk representation during a `knncolle::Prebuilt::save()` call.
  */
 template<typename Type_>
 NumericType get_numeric_type() {
@@ -217,12 +222,27 @@ inline PrebuiltSaveConfig scan_prebuilt_save_config(const std::string& prefix) {
     PrebuiltSaveConfig config;
     config.index = types[0];
     config.data = types[1];
-
-    const std::string distpath = prefix + "distance";
-    std::ifstream input(distpath);
-    config.distance.insert(config.distance.end(), (std::istreambuf_iterator<char>(input)), (std::istreambuf_iterator<char>()) );
+    config.distance = knncolle::quick_load_as_string(prefix + "distance");
 
     return config;
+}
+
+/**
+ * Define a customized saving function to preserve type information from the Annoy index in `knncolle::Prebuilt::save()`.
+ * Users can provide their own function here, to handle types that are unknown to `get_numeric_type()` or `get_distance_name()`.
+ * Any modifications to this function are not thread-safe and should be done in a serial section. 
+ *
+ * @tparam AnnoyDistance_ An **Annoy**-compatible class to compute the distance between vectors. 
+ * @tparam AnnoyIndex_ Integer type for the observation indices in the Annoy index.
+ * @tparam AnnoyData_ Floating-point type for data in the Annoy index.
+ *
+ * @return A global function for saving information about `AnnoyDistance_`, `AnnoyIndex_` and `AnnoyData_`.
+ * If set, this will be called by the `knncolle::Prebuilt::save()` method for the Annoy `Prebuilt` subclass.
+ */
+template<class AnnoyDistance_, typename AnnoyIndex_, typename AnnoyData_>
+std::function<void(const std::string&)>& customize_save_for_annoy_types() {
+    static std::function<void(const std::string&)> fun;
+    return fun;
 }
 
 }
