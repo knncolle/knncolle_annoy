@@ -26,6 +26,9 @@ inline static const char* save_name = "knncolle_annoy::Annoy";
 /**
  * @cond
  */
+template<typename Input_>
+using I = std::remove_cv_t<std::remove_reference_t<Input_> >;
+
 // Doing some SFINAE nonsense.
 template<typename AnnoyDistance_, typename Other_ = int> 
 struct has_name {
