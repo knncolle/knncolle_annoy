@@ -398,81 +398,79 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        <span class="keyword">const</span> <span class="keyword">auto</span> idxpath = prefix + <span class="stringliteral">&quot;index&quot;</span>;</div>
 <div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>        <span class="keywordtype">char</span>* errbuf = NULL;</div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>        <span class="keywordflow">if</span> (!my_index.load(idxpath.c_str(), <span class="keyword">true</span>, &amp;errbuf)) {</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>            std::string errmsg = <span class="stringliteral">&quot;unknown AnnoyIndex::load() error&quot;</span>;</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>            <span class="keywordflow">if</span> (errbuf != NULL) {</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>                errmsg = errbuf;</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>            }</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>            <span class="keywordflow">throw</span> std::runtime_error(errmsg.c_str());</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>        }</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>    }</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>};</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span><span class="keyword">template</span>&lt;</div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>    <span class="keyword">typename</span> Index_,</div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>    <span class="keyword">typename</span> Data_,</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>    <span class="keyword">typename</span> Distance_, </div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    <span class="keyword">class </span>AnnoyDistance_,</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    <span class="keyword">typename</span> AnnoyIndex_ = Index_,</div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    <span class="keyword">typename</span> AnnoyData_ = float,</div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    <span class="keyword">class </span>AnnoyRng_ = Annoy::Kiss64Random,</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="keyword">class </span>AnnoyThreadPolicy_ = Annoy::AnnoyIndexSingleThreadedBuildPolicy,</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    <span class="keyword">class </span>Matrix_ = <a class="code hl_classRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Matrix.html">knncolle::Matrix&lt;Index_, Data_&gt;</a></div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>&gt;</div>
-<div class="foldopen" id="foldopen00374" data-start="{" data-end="};">
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno"><a class="line" href="classknncolle__annoy_1_1AnnoyBuilder.html">  374</a></span><span class="keyword">class </span><a class="code hl_class" href="classknncolle__annoy_1_1AnnoyBuilder.html">AnnoyBuilder</a> : <span class="keyword">public</span> <a class="code hl_classRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Builder.html">knncolle::Builder</a>&lt;Index_, Data_, Distance_, Matrix_&gt; {</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    <a class="code hl_struct" href="structknncolle__annoy_1_1AnnoyOptions.html">AnnoyOptions</a> my_options;</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span> </div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno"><a class="line" href="classknncolle__annoy_1_1AnnoyBuilder.html#a3af65d7b88c5b9801d06c5fc2ceb8a75">  382</a></span>    <a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a3af65d7b88c5b9801d06c5fc2ceb8a75">AnnoyBuilder</a>(<a class="code hl_struct" href="structknncolle__annoy_1_1AnnoyOptions.html">AnnoyOptions</a> options) : my_options(std::move(options)) {}</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span> </div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno"><a class="line" href="classknncolle__annoy_1_1AnnoyBuilder.html#a7e5b30a68c3c208104b769b02cb446c7">  387</a></span>    <a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a7e5b30a68c3c208104b769b02cb446c7">AnnoyBuilder</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span> </div>
-<div class="foldopen" id="foldopen00393" data-start="{" data-end="}">
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno"><a class="line" href="classknncolle__annoy_1_1AnnoyBuilder.html#a45abac40b562d4aa23e89b0eae298dd0">  393</a></span>    <a class="code hl_struct" href="structknncolle__annoy_1_1AnnoyOptions.html">AnnoyOptions</a>&amp; <a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a45abac40b562d4aa23e89b0eae298dd0">get_options</a>() {</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>        <span class="keywordflow">return</span> my_options;</div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    }</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>            std::runtime_error ex(errbuf);</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>            <span class="keyword">delete</span> errbuf;</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>            <span class="keywordflow">throw</span> ex;</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        }</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    }</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>};</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span><span class="keyword">template</span>&lt;</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    <span class="keyword">typename</span> Index_,</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>    <span class="keyword">typename</span> Data_,</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>    <span class="keyword">typename</span> Distance_, </div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>    <span class="keyword">class </span>AnnoyDistance_,</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>    <span class="keyword">typename</span> AnnoyIndex_ = Index_,</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    <span class="keyword">typename</span> AnnoyData_ = float,</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    <span class="keyword">class </span>AnnoyRng_ = Annoy::Kiss64Random,</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    <span class="keyword">class </span>AnnoyThreadPolicy_ = Annoy::AnnoyIndexSingleThreadedBuildPolicy,</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    <span class="keyword">class </span>Matrix_ = <a class="code hl_classRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Matrix.html">knncolle::Matrix&lt;Index_, Data_&gt;</a></div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>&gt;</div>
+<div class="foldopen" id="foldopen00372" data-start="{" data-end="};">
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno"><a class="line" href="classknncolle__annoy_1_1AnnoyBuilder.html">  372</a></span><span class="keyword">class </span><a class="code hl_class" href="classknncolle__annoy_1_1AnnoyBuilder.html">AnnoyBuilder</a> : <span class="keyword">public</span> <a class="code hl_classRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Builder.html">knncolle::Builder</a>&lt;Index_, Data_, Distance_, Matrix_&gt; {</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    <a class="code hl_struct" href="structknncolle__annoy_1_1AnnoyOptions.html">AnnoyOptions</a> my_options;</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span> </div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno"><a class="line" href="classknncolle__annoy_1_1AnnoyBuilder.html#a3af65d7b88c5b9801d06c5fc2ceb8a75">  380</a></span>    <a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a3af65d7b88c5b9801d06c5fc2ceb8a75">AnnoyBuilder</a>(<a class="code hl_struct" href="structknncolle__annoy_1_1AnnoyOptions.html">AnnoyOptions</a> options) : my_options(std::move(options)) {}</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span> </div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno"><a class="line" href="classknncolle__annoy_1_1AnnoyBuilder.html#a7e5b30a68c3c208104b769b02cb446c7">  385</a></span>    <a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a7e5b30a68c3c208104b769b02cb446c7">AnnoyBuilder</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span> </div>
+<div class="foldopen" id="foldopen00391" data-start="{" data-end="}">
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno"><a class="line" href="classknncolle__annoy_1_1AnnoyBuilder.html#a45abac40b562d4aa23e89b0eae298dd0">  391</a></span>    <a class="code hl_struct" href="structknncolle__annoy_1_1AnnoyOptions.html">AnnoyOptions</a>&amp; <a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a45abac40b562d4aa23e89b0eae298dd0">get_options</a>() {</div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>        <span class="keywordflow">return</span> my_options;</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    }</div>
 </div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span> </div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    <a class="code hl_classRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html">knncolle::Prebuilt&lt;Index_, Data_, Distance_&gt;</a>* build_raw(<span class="keyword">const</span> Matrix_&amp; data)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">build_known_raw</a>(data);</div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    }</div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span> </div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00406" data-start="{" data-end="}">
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno"><a class="line" href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">  406</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">build_known_raw</a>(<span class="keyword">const</span> Matrix_&amp; data)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> AnnoyPrebuilt&lt;Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_&gt;(data, my_options);</div>
-<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>    }</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span> </div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    <a class="code hl_classRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html">knncolle::Prebuilt&lt;Index_, Data_, Distance_&gt;</a>* build_raw(<span class="keyword">const</span> Matrix_&amp; data)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">build_known_raw</a>(data);</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    }</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span> </div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00404" data-start="{" data-end="}">
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno"><a class="line" href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">  404</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">build_known_raw</a>(<span class="keyword">const</span> Matrix_&amp; data)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> AnnoyPrebuilt&lt;Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_&gt;(data, my_options);</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    }</div>
 </div>
-<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span> </div>
-<div class="foldopen" id="foldopen00413" data-start="{" data-end="}">
-<div class="line"><a id="l00413" name="l00413"></a><span class="lineno"><a class="line" href="classknncolle__annoy_1_1AnnoyBuilder.html#a39cd70c3a33db9b2700cb0da079e041d">  413</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a39cd70c3a33db9b2700cb0da079e041d">build_known_unique</a>(<span class="keyword">const</span> Matrix_&amp; data)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>        <span class="keywordflow">return</span> std::unique_ptr&lt;std::remove_reference_t&lt;<span class="keyword">decltype</span>(*<a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">build_known_raw</a>(data))&gt; &gt;(<a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">build_known_raw</a>(data));</div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>    }</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span> </div>
+<div class="foldopen" id="foldopen00411" data-start="{" data-end="}">
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno"><a class="line" href="classknncolle__annoy_1_1AnnoyBuilder.html#a39cd70c3a33db9b2700cb0da079e041d">  411</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a39cd70c3a33db9b2700cb0da079e041d">build_known_unique</a>(<span class="keyword">const</span> Matrix_&amp; data)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>        <span class="keywordflow">return</span> std::unique_ptr&lt;std::remove_reference_t&lt;<span class="keyword">decltype</span>(*<a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">build_known_raw</a>(data))&gt; &gt;(<a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">build_known_raw</a>(data));</div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    }</div>
 </div>
-<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span> </div>
-<div class="foldopen" id="foldopen00420" data-start="{" data-end="}">
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno"><a class="line" href="classknncolle__annoy_1_1AnnoyBuilder.html#aeb1e5d4f935173899a8cc98b7bdb6684">  420</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#aeb1e5d4f935173899a8cc98b7bdb6684">build_known_shared</a>(<span class="keyword">const</span> Matrix_&amp; data)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>        <span class="keywordflow">return</span> std::shared_ptr&lt;std::remove_reference_t&lt;<span class="keyword">decltype</span>(*<a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">build_known_raw</a>(data))&gt; &gt;(<a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">build_known_raw</a>(data));</div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>    }</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span> </div>
+<div class="foldopen" id="foldopen00418" data-start="{" data-end="}">
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno"><a class="line" href="classknncolle__annoy_1_1AnnoyBuilder.html#aeb1e5d4f935173899a8cc98b7bdb6684">  418</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#aeb1e5d4f935173899a8cc98b7bdb6684">build_known_shared</a>(<span class="keyword">const</span> Matrix_&amp; data)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>        <span class="keywordflow">return</span> std::shared_ptr&lt;std::remove_reference_t&lt;<span class="keyword">decltype</span>(*<a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">build_known_raw</a>(data))&gt; &gt;(<a class="code hl_function" href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">build_known_raw</a>(data));</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    }</div>
 </div>
-<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>};</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>};</div>
 </div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span> </div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>}</div>
 <div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span> </div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>}</div>
-<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span> </div>
-<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassknncolle_1_1Builder_html"><div class="ttname"><a href="https://knncolle.github.io/knncolle/classknncolle_1_1Builder.html">knncolle::Builder</a></div></div>
 <div class="ttc" id="aclassknncolle_1_1Matrix_html"><div class="ttname"><a href="https://knncolle.github.io/knncolle/classknncolle_1_1Matrix.html">knncolle::Matrix</a></div></div>
 <div class="ttc" id="aclassknncolle_1_1Prebuilt_html"><div class="ttname"><a href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html">knncolle::Prebuilt</a></div></div>
 <div class="ttc" id="aclassknncolle_1_1Searcher_html"><div class="ttname"><a href="https://knncolle.github.io/knncolle/classknncolle_1_1Searcher.html">knncolle::Searcher</a></div></div>
-<div class="ttc" id="aclassknncolle__annoy_1_1AnnoyBuilder_html"><div class="ttname"><a href="classknncolle__annoy_1_1AnnoyBuilder.html">knncolle_annoy::AnnoyBuilder</a></div><div class="ttdoc">Perform an approximate nearest neighbor search with Annoy.</div><div class="ttdef"><b>Definition</b> knncolle_annoy.hpp:374</div></div>
-<div class="ttc" id="aclassknncolle__annoy_1_1AnnoyBuilder_html_a39cd70c3a33db9b2700cb0da079e041d"><div class="ttname"><a href="classknncolle__annoy_1_1AnnoyBuilder.html#a39cd70c3a33db9b2700cb0da079e041d">knncolle_annoy::AnnoyBuilder::build_known_unique</a></div><div class="ttdeci">auto build_known_unique(const Matrix_ &amp;data) const</div><div class="ttdef"><b>Definition</b> knncolle_annoy.hpp:413</div></div>
-<div class="ttc" id="aclassknncolle__annoy_1_1AnnoyBuilder_html_a3af65d7b88c5b9801d06c5fc2ceb8a75"><div class="ttname"><a href="classknncolle__annoy_1_1AnnoyBuilder.html#a3af65d7b88c5b9801d06c5fc2ceb8a75">knncolle_annoy::AnnoyBuilder::AnnoyBuilder</a></div><div class="ttdeci">AnnoyBuilder(AnnoyOptions options)</div><div class="ttdef"><b>Definition</b> knncolle_annoy.hpp:382</div></div>
-<div class="ttc" id="aclassknncolle__annoy_1_1AnnoyBuilder_html_a45abac40b562d4aa23e89b0eae298dd0"><div class="ttname"><a href="classknncolle__annoy_1_1AnnoyBuilder.html#a45abac40b562d4aa23e89b0eae298dd0">knncolle_annoy::AnnoyBuilder::get_options</a></div><div class="ttdeci">AnnoyOptions &amp; get_options()</div><div class="ttdef"><b>Definition</b> knncolle_annoy.hpp:393</div></div>
+<div class="ttc" id="aclassknncolle__annoy_1_1AnnoyBuilder_html"><div class="ttname"><a href="classknncolle__annoy_1_1AnnoyBuilder.html">knncolle_annoy::AnnoyBuilder</a></div><div class="ttdoc">Perform an approximate nearest neighbor search with Annoy.</div><div class="ttdef"><b>Definition</b> knncolle_annoy.hpp:372</div></div>
+<div class="ttc" id="aclassknncolle__annoy_1_1AnnoyBuilder_html_a39cd70c3a33db9b2700cb0da079e041d"><div class="ttname"><a href="classknncolle__annoy_1_1AnnoyBuilder.html#a39cd70c3a33db9b2700cb0da079e041d">knncolle_annoy::AnnoyBuilder::build_known_unique</a></div><div class="ttdeci">auto build_known_unique(const Matrix_ &amp;data) const</div><div class="ttdef"><b>Definition</b> knncolle_annoy.hpp:411</div></div>
+<div class="ttc" id="aclassknncolle__annoy_1_1AnnoyBuilder_html_a3af65d7b88c5b9801d06c5fc2ceb8a75"><div class="ttname"><a href="classknncolle__annoy_1_1AnnoyBuilder.html#a3af65d7b88c5b9801d06c5fc2ceb8a75">knncolle_annoy::AnnoyBuilder::AnnoyBuilder</a></div><div class="ttdeci">AnnoyBuilder(AnnoyOptions options)</div><div class="ttdef"><b>Definition</b> knncolle_annoy.hpp:380</div></div>
+<div class="ttc" id="aclassknncolle__annoy_1_1AnnoyBuilder_html_a45abac40b562d4aa23e89b0eae298dd0"><div class="ttname"><a href="classknncolle__annoy_1_1AnnoyBuilder.html#a45abac40b562d4aa23e89b0eae298dd0">knncolle_annoy::AnnoyBuilder::get_options</a></div><div class="ttdeci">AnnoyOptions &amp; get_options()</div><div class="ttdef"><b>Definition</b> knncolle_annoy.hpp:391</div></div>
 <div class="ttc" id="aclassknncolle__annoy_1_1AnnoyBuilder_html_a7e5b30a68c3c208104b769b02cb446c7"><div class="ttname"><a href="classknncolle__annoy_1_1AnnoyBuilder.html#a7e5b30a68c3c208104b769b02cb446c7">knncolle_annoy::AnnoyBuilder::AnnoyBuilder</a></div><div class="ttdeci">AnnoyBuilder()=default</div></div>
-<div class="ttc" id="aclassknncolle__annoy_1_1AnnoyBuilder_html_a9c2ddf11d516555b458b1dad3306102d"><div class="ttname"><a href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">knncolle_annoy::AnnoyBuilder::build_known_raw</a></div><div class="ttdeci">auto build_known_raw(const Matrix_ &amp;data) const</div><div class="ttdef"><b>Definition</b> knncolle_annoy.hpp:406</div></div>
-<div class="ttc" id="aclassknncolle__annoy_1_1AnnoyBuilder_html_aeb1e5d4f935173899a8cc98b7bdb6684"><div class="ttname"><a href="classknncolle__annoy_1_1AnnoyBuilder.html#aeb1e5d4f935173899a8cc98b7bdb6684">knncolle_annoy::AnnoyBuilder::build_known_shared</a></div><div class="ttdeci">auto build_known_shared(const Matrix_ &amp;data) const</div><div class="ttdef"><b>Definition</b> knncolle_annoy.hpp:420</div></div>
+<div class="ttc" id="aclassknncolle__annoy_1_1AnnoyBuilder_html_a9c2ddf11d516555b458b1dad3306102d"><div class="ttname"><a href="classknncolle__annoy_1_1AnnoyBuilder.html#a9c2ddf11d516555b458b1dad3306102d">knncolle_annoy::AnnoyBuilder::build_known_raw</a></div><div class="ttdeci">auto build_known_raw(const Matrix_ &amp;data) const</div><div class="ttdef"><b>Definition</b> knncolle_annoy.hpp:404</div></div>
+<div class="ttc" id="aclassknncolle__annoy_1_1AnnoyBuilder_html_aeb1e5d4f935173899a8cc98b7bdb6684"><div class="ttname"><a href="classknncolle__annoy_1_1AnnoyBuilder.html#aeb1e5d4f935173899a8cc98b7bdb6684">knncolle_annoy::AnnoyBuilder::build_known_shared</a></div><div class="ttdeci">auto build_known_shared(const Matrix_ &amp;data) const</div><div class="ttdef"><b>Definition</b> knncolle_annoy.hpp:418</div></div>
 <div class="ttc" id="aknncolle_8hpp_html"><div class="ttname"><a href="https://knncolle.github.io/knncolle/knncolle_8hpp.html">knncolle.hpp</a></div></div>
 <div class="ttc" id="anamespaceknncolle__annoy_html"><div class="ttname"><a href="namespaceknncolle__annoy.html">knncolle_annoy</a></div><div class="ttdoc">Approximate nearest neighbor search with Annoy.</div></div>
 <div class="ttc" id="anamespaceknncolle__annoy_html_ab5b68f6564b16322f9b231b4548ecd0c"><div class="ttname"><a href="namespaceknncolle__annoy.html#ab5b68f6564b16322f9b231b4548ecd0c">knncolle_annoy::NumericType</a></div><div class="ttdeci">NumericType</div><div class="ttdef"><b>Definition</b> utils.hpp:73</div></div>
