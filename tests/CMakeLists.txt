@@ -17,6 +17,7 @@ enable_testing()
 add_executable(
     libtest
     src/Annoy.cpp
+    src/load_annoy_prebuilt.cpp
     src/utils.cpp
 )
 
