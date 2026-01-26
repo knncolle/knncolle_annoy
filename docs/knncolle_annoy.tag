@@ -4,9 +4,8 @@
     <name>knncolle_annoy.hpp</name>
     <path>/github/workspace/include/knncolle_annoy/</path>
     <filename>knncolle__annoy_8hpp.html</filename>
+    <includes id="load__annoy__prebuilt_8hpp" name="load_annoy_prebuilt.hpp" local="yes" import="no" module="no" objc="no">load_annoy_prebuilt.hpp</includes>
     <includes id="utils_8hpp" name="utils.hpp" local="yes" import="no" module="no" objc="no">utils.hpp</includes>
-    <class kind="struct">knncolle_annoy::AnnoyOptions</class>
-    <class kind="class">knncolle_annoy::AnnoyBuilder</class>
     <namespace>knncolle_annoy</namespace>
   </compound>
   <compound kind="file">
