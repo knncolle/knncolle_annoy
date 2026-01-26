@@ -107,6 +107,7 @@ $(function(){ initResizable(false); });
 <code>#include &lt;cstddef&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
+<code>#include &lt;functional&gt;</code><br />
 <code>#include &quot;<a class="elRef" href="https://knncolle.github.io/knncolle/knncolle_8hpp.html">knncolle/knncolle.hpp</a>&quot;</code><br />
 </div>
 <p><a href="utils_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -169,6 +170,9 @@ Functions</h2></td></tr>
 <tr class="separator:a5a77303e4f9434ddc0218aa14b19f1fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50ce8ca5c3c5ae8fa68bc34a67f092d9" id="r_a50ce8ca5c3c5ae8fa68bc34a67f092d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structknncolle__annoy_1_1PrebuiltSaveConfig.html">PrebuiltSaveConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceknncolle__annoy.html#a50ce8ca5c3c5ae8fa68bc34a67f092d9">knncolle_annoy::scan_prebuilt_save_config</a> (const std::string &amp;prefix)</td></tr>
 <tr class="separator:a50ce8ca5c3c5ae8fa68bc34a67f092d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46b2125811a26fae459c4c54803be3ae" id="r_a46b2125811a26fae459c4c54803be3ae"><td class="memTemplParams" colspan="2">template&lt;class AnnoyDistance_ , typename AnnoyIndex_ , typename AnnoyData_ &gt; </td></tr>
+<tr class="memitem:a46b2125811a26fae459c4c54803be3ae"><td class="memTemplItemLeft" align="right" valign="top">std::function&lt; void(const std::string &amp;)&gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceknncolle__annoy.html#a46b2125811a26fae459c4c54803be3ae">knncolle_annoy::customize_save_for_annoy_types</a> ()</td></tr>
+<tr class="separator:a46b2125811a26fae459c4c54803be3ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for the Annoy wrappers. </p>

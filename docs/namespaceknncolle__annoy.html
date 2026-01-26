@@ -158,6 +158,9 @@ Functions</h2></td></tr>
 <tr class="separator:a5a77303e4f9434ddc0218aa14b19f1fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50ce8ca5c3c5ae8fa68bc34a67f092d9" id="r_a50ce8ca5c3c5ae8fa68bc34a67f092d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structknncolle__annoy_1_1PrebuiltSaveConfig.html">PrebuiltSaveConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50ce8ca5c3c5ae8fa68bc34a67f092d9">scan_prebuilt_save_config</a> (const std::string &amp;prefix)</td></tr>
 <tr class="separator:a50ce8ca5c3c5ae8fa68bc34a67f092d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46b2125811a26fae459c4c54803be3ae" id="r_a46b2125811a26fae459c4c54803be3ae"><td class="memTemplParams" colspan="2">template&lt;class AnnoyDistance_ , typename AnnoyIndex_ , typename AnnoyData_ &gt; </td></tr>
+<tr class="memitem:a46b2125811a26fae459c4c54803be3ae"><td class="memTemplItemLeft" align="right" valign="top">std::function&lt; void(const std::string &amp;)&gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a46b2125811a26fae459c4c54803be3ae">customize_save_for_annoy_types</a> ()</td></tr>
+<tr class="separator:a46b2125811a26fae459c4c54803be3ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Approximate nearest neighbor search with Annoy. </p>
@@ -186,6 +189,35 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a46b2125811a26fae459c4c54803be3ae" name="a46b2125811a26fae459c4c54803be3ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46b2125811a26fae459c4c54803be3ae">&#9670;&#160;</a></span>customize_save_for_annoy_types()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class AnnoyDistance_ , typename AnnoyIndex_ , typename AnnoyData_ &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::function&lt; void(const std::string &amp;)&gt; &amp; knncolle_annoy::customize_save_for_annoy_types </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Define a customized saving function to preserve type information from the Annoy index in <code><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html#a87930f878bf3a22297b851173caaf893">knncolle::Prebuilt::save()</a></code>. Users can provide their own function here, to handle types that are unknown to <code><a class="el" href="#a5a77303e4f9434ddc0218aa14b19f1fb">get_numeric_type()</a></code> or <code><a class="el" href="#a0f46fd7ab22d7976baec00c98c038bea">get_distance_name()</a></code>. Any modifications to this function are not thread-safe and should be done in a serial section.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">AnnoyDistance_</td><td>An <b>Annoy</b>-compatible class to compute the distance between vectors. </td></tr>
+    <tr><td class="paramname">AnnoyIndex_</td><td>Integer type for the observation indices in the Annoy index. </td></tr>
+    <tr><td class="paramname">AnnoyData_</td><td>Floating-point type for data in the Annoy index.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A global function for saving information about <code>AnnoyDistance_</code>, <code>AnnoyIndex_</code> and <code>AnnoyData_</code>. If set, this will be called by the <code><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html#a87930f878bf3a22297b851173caaf893">knncolle::Prebuilt::save()</a></code> method for the Annoy <code>Prebuilt</code> subclass. </dd></dl>
+
+</div>
+</div>
 <a id="a0f46fd7ab22d7976baec00c98c038bea" name="a0f46fd7ab22d7976baec00c98c038bea"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0f46fd7ab22d7976baec00c98c038bea">&#9670;&#160;</a></span>get_distance_name()</h2>
 
@@ -208,7 +240,8 @@ template&lt;typename AnnoyDistance_ &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Name of the distance metric, e.g., <code>"euclidean"</code>, <code>"manhattan"</code>. This is taken from <code>AnnoyDistance_::name()</code> if such a method exists, otherwise <code>"unknown"</code> is returned. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Name of the distance metric, e.g., <code>"euclidean"</code>, <code>"manhattan"</code>. This is taken from <code>AnnoyDistance_::name()</code> if such a method exists, otherwise <code>"unknown"</code> is returned.</dd></dl>
+<p>For unknown distances, consider using <code><a class="el" href="#a46b2125811a26fae459c4c54803be3ae">customize_save_for_annoy_types()</a></code> to add more information to the on-disk representation during a <code><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html#a87930f878bf3a22297b851173caaf893">knncolle::Prebuilt::save()</a></code> call. </p>
 
 </div>
 </div>
@@ -234,7 +267,8 @@ template&lt;typename Type_ &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Identity of the numeric type. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Identity of the numeric type.</dd></dl>
+<p>For unknown types, consider using <code><a class="el" href="#a46b2125811a26fae459c4c54803be3ae">customize_save_for_annoy_types()</a></code> to add more information to the on-disk representation during a <code><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html#a87930f878bf3a22297b851173caaf893">knncolle::Prebuilt::save()</a></code> call. </p>
 
 </div>
 </div>

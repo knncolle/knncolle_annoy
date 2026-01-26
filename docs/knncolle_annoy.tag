@@ -187,6 +187,13 @@
       <anchor>a50ce8ca5c3c5ae8fa68bc34a67f092d9</anchor>
       <arglist>(const std::string &amp;prefix)</arglist>
     </member>
+    <member kind="function">
+      <type>std::function&lt; void(const std::string &amp;)&gt; &amp;</type>
+      <name>customize_save_for_annoy_types</name>
+      <anchorfile>namespaceknncolle__annoy.html</anchorfile>
+      <anchor>a46b2125811a26fae459c4c54803be3ae</anchor>
+      <arglist>()</arglist>
+    </member>
   </compound>
   <compound kind="page">
     <name>index</name>
