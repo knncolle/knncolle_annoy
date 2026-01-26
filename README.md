@@ -92,6 +92,44 @@ typedef knncolle_annoy::AnnoyBuilder<
 > MyAnnoyBuilder;
 ```
 
+## Saving and reloading indices
+
+To save and reload Annoy indices from disk, we need to register a loading function into **knncolle**'s `load_prebuilt()` registry.
+This is a little complicated as we must decide on which combinations of types and distances we want to deal with.
+Here, we only consider the obvious distance metrics and the defaults for the internal Annoy types,
+though more combinations could also be supported at the cost of larger binaries and longer compile times.
+
+```cpp
+auto& reg = knncolle::load_prebuilt_registry<int, double, double>();
+reg[knncolle_annoy::save_name] = [](const std::string& prefix) -> Prebuilt<int, double, double>* {
+    auto config = knncolle_annoy::scan_prebuilt_save_config(prefix);
+
+    // Maybe add some checks that the types are as expected.
+    if (config.index != knncolle_annoy::get_numeric_type<int>()) {
+        throw std::runtime_error("unexpected type for the Annoy index");
+    }
+    if (config.data != knncolle_annoy::get_numeric_type<float>()) {
+        throw std::runtime_error("unexpected type for the Annoy data");
+    }
+
+    if (config.distance == "euclidean") {
+        return knncolle_annoy::load_annoy_prebuilt<int, double, double, Annoy::Euclidean>();
+    } else if (config.distance != "manhattan") {
+        throw std::runtime_error("unknown Annoy distance");
+    }
+    return knncolle_annoy::load_annoy_prebuilt<int, double, double, Annoy::Manhattan>();
+};
+```
+
+Then we can save and reload the `Prebuilt` Annoy indices.
+Note the caveats on `knncolle::Prebuilt::save()` - specifically, the files are not guaranteed to be portable between machines or even different versions of **knncolle_annoy**.
+
+```cpp
+std::string path_prefix = "anno/location/here_";
+an_index.save(path_prefix);
+auto reloaded = knncolle::load_prebuilt(path_prefix);
+```
+
 ## Building projects 
 
 ### CMake with `FetchContent`

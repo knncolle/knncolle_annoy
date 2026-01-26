@@ -17,6 +17,7 @@ enable_testing()
 add_executable(
     libtest
     src/Annoy.cpp
+    src/utils.cpp
 )
 
 target_link_libraries(

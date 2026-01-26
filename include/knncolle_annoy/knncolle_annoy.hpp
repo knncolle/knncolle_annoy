@@ -6,10 +6,13 @@
 #include <algorithm>
 #include <memory>
 #include <cstddef>
+#include <cstring>
 
 #include "knncolle/knncolle.hpp"
 #include "annoy/annoylib.h"
 #include "annoy/kissrandom.h"
+
+#include "utils.hpp"
 
 /**
  * @file knncolle_annoy.hpp
@@ -253,7 +256,27 @@ private:
     std::size_t my_dim;
     Index_ my_obs;
     double my_search_mult;
-    Annoy::AnnoyIndex<AnnoyIndex_, AnnoyData_, AnnoyDistance_, AnnoyRng_, AnnoyThreadPolicy_> my_index;
+
+    // Unfortunately, AnnoyIndex::save is not const (and also unloads and
+    // reloads the index, for reasons I don't understand). So we manually
+    // handle the saving by looking into the protected members.
+    struct SuperHackyThing final : public Annoy::AnnoyIndex<AnnoyIndex_, AnnoyData_, AnnoyDistance_, AnnoyRng_, AnnoyThreadPolicy_> {
+        template<typename ... Args_>
+        SuperHackyThing(Args_&& ... args) : Annoy::AnnoyIndex<AnnoyIndex_, AnnoyData_, AnnoyDistance_, AnnoyRng_, AnnoyThreadPolicy_>(std::forward<Args_>(args)...) {}
+
+        auto get_nodes() const {
+            return this->_nodes;
+        }
+
+        auto get_s() const {
+            return this->_s;
+        }
+
+        auto get_n_nodes() const {
+            return this->_n_nodes;
+        }
+    };
+    SuperHackyThing my_index;
 
     friend class AnnoySearcher<Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_>;
 
@@ -272,6 +295,40 @@ public:
 
     auto initialize_known() const {
         return std::make_unique<AnnoySearcher<Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_> >(*this);
+    }
+
+public:
+    void save(const std::string& prefix) const {
+        knncolle::quick_save(prefix + "ALGORITHM", save_name, std::strlen(save_name));
+        knncolle::quick_save(prefix + "num_obs", &my_obs, 1);
+        knncolle::quick_save(prefix + "num_dim", &my_dim, 1);
+        knncolle::quick_save(prefix + "search_mult", &my_search_mult, 1);
+
+        NumericType types[2];
+        types[0] = get_numeric_type<AnnoyIndex_>();
+        types[1] = get_numeric_type<AnnoyData_>();
+        knncolle::quick_save(prefix + "types", types, 2);
+
+        const auto dname = get_distance_name<AnnoyDistance_>();
+        knncolle::quick_save(prefix + "distance", dname, std::strlen(dname));
+
+        // Not bothering to save anything else; the RNG and thread policy
+        // should not be relevant once the index is built.
+        const auto idxpath = prefix + "index";
+        knncolle::quick_save(idxpath, reinterpret_cast<char*>(my_index.get_nodes()), static_cast<std::size_t>(my_index.get_s()) * my_index.get_n_nodes());
+    }
+
+    AnnoyPrebuilt(const std::string prefix, std::size_t ndim) : my_dim(ndim), my_index(ndim) {
+        knncolle::quick_load(prefix + "num_obs", &my_obs, 1);
+        knncolle::quick_load(prefix + "search_mult", &my_search_mult, 1);
+
+        const auto idxpath = prefix + "index";
+        char* errbuf = NULL;
+        if (!my_index.load(idxpath.c_str(), true, &errbuf)) {
+            std::runtime_error ex(errbuf);
+            delete errbuf;
+            throw ex;
+        }
     }
 };
 /**
