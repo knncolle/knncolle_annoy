@@ -248,16 +248,40 @@ public:
 TEST_F(AnnoyMiscTest, SearchMult) {
     knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Euclidean> ab;
     auto& an_opt = ab.get_options();
-    an_opt.search_mult = 20;
 
     knncolle::SimpleMatrix<int, double> mat(ndim, nobs, data.data());
-    auto ptr = ab.build_known_shared(mat); // test coverage for the known override.
-    auto sptr = ptr->initialize();
+    auto default_ptr = ab.build_known_shared(mat); // test coverage for the known override.
 
-    std::vector<int> ires;
-    std::vector<double> dres;
-    sptr->search(0, 10, &ires, &dres);
-    sanity_checks(ires, dres, 10, 0);
+    // Manually setting the search multiplier and checking we get the same result.
+    {
+        an_opt.search_mult = an_opt.num_trees;
+        auto manual_ptr = ab.build_known_shared(mat);
+        auto dptr = default_ptr->initialize();
+        auto mptr = manual_ptr->initialize();
+
+        std::vector<int> output_i, output_i2;
+        std::vector<double> output_d, output_d2;
+        for (int x = 0; x < nobs; ++x) {
+            dptr->search(x, 5, &output_i, &output_d);
+            mptr->search(x, 5, &output_i2, &output_d2);
+            EXPECT_EQ(output_i, output_i2);
+            EXPECT_EQ(output_d, output_d2);
+        }
+    }
+
+    // Using an obscenely large multiplier.
+    {
+        an_opt.search_mult = std::numeric_limits<double>::max();
+        auto super_ptr = ab.build_known_shared(mat);
+        auto sptr = super_ptr->initialize();
+
+        std::vector<int> output_i;
+        std::vector<double> output_d;
+        for (int x = 0; x < nobs; ++x) {
+            sptr->search(x, 5, &output_i, &output_d);
+            sanity_checks(output_i, output_d, 5, x);
+        }
+    }
 }
 
 TEST(Annoy, Duplicates) {

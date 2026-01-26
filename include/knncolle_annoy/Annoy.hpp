@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <cstring>
 #include <stdexcept>
+#include <limits>
 
 #include "knncolle/knncolle.hpp"
 #include "annoy/annoylib.h"
@@ -68,18 +69,28 @@ private:
     static constexpr bool same_internal_distance = std::is_same<Distance_, AnnoyData_>::value;
     typename std::conditional<!same_internal_distance, std::vector<AnnoyData_>, bool>::type my_distances;
 
-    int get_search_k(int k) const {
+    typedef int SearchKType;
+
+    Index_ my_capped_k = 0;
+
+    SearchKType get_search_k(Index_ k) const {
         if (my_parent.my_search_mult < 1) {
             return -1; // instructs Annoy to use k * num_trees. 
-        } else {
+        } else if (k <= my_capped_k) {
             return my_parent.my_search_mult * static_cast<double>(k) + 0.5; // rounded.
+        } else {
+            return std::numeric_limits<SearchKType>::max(); // cap to avoid overflow.
         }
     }
 
 public:
     AnnoySearcher(const AnnoyPrebuilt<Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_>& parent) : my_parent(parent) {
         if constexpr(!same_internal_data) {
-            my_buffer.resize(my_parent.my_dim);
+            sanisizer::resize(my_buffer, my_parent.my_dim);
+        }
+
+        if (my_parent.my_search_mult >= 1) {
+            my_capped_k = static_cast<double>(std::numeric_limits<SearchKType>::max()) / my_parent.my_search_mult;
         }
     }
 
@@ -139,18 +150,26 @@ private:
 
 public:
     void search(Index_ i, Index_ k, std::vector<Index_>* output_indices, std::vector<Distance_>* output_distances) {
-        Index_ kp1 = k + 1; // +1, as it forgets to discard 'self'.
+        // +1, as it forgets to discard 'self'. This should not overflow as k < num_obs.
+        const auto kp1 = k + 1;
+
         auto ptrs = obtain_pointers(output_indices, output_distances, kp1);
         auto icopy_ptr = ptrs.first;
         auto dcopy_ptr = ptrs.second;
 
-        my_parent.my_index.get_nns_by_item(i, kp1, get_search_k(kp1), icopy_ptr, dcopy_ptr);
+        my_parent.my_index.get_nns_by_item(
+            i,
+            sanisizer::cast<std::size_t>(sanisizer::attest_gez(kp1)),
+            get_search_k(kp1),
+            icopy_ptr,
+            dcopy_ptr
+        );
 
         std::size_t at;
         {
             const auto& cur_i = *icopy_ptr;
             at = cur_i.size();
-            AnnoyIndex_ icopy = i;
+            const AnnoyIndex_ icopy = i; // cast to AnnoyIndex_ to avoid signed/unsigned comparisons.
             for (std::size_t x = 0, end = cur_i.size(); x < end; ++x) {
                 if (cur_i[x] == icopy) {
                     at = x;
@@ -182,7 +201,13 @@ private:
         auto icopy_ptr = ptrs.first;
         auto dcopy_ptr = ptrs.second;
 
-        my_parent.my_index.get_nns_by_vector(query, k, get_search_k(k), icopy_ptr, dcopy_ptr);
+        my_parent.my_index.get_nns_by_vector(
+            query,
+            sanisizer::cast<std::size_t>(sanisizer::attest_gez(k)),
+            get_search_k(k),
+            icopy_ptr,
+            dcopy_ptr
+        );
 
         if (output_indices) {
             if constexpr(!same_internal_index) {
@@ -229,6 +254,9 @@ public:
         my_search_mult(options.search_mult),
         my_index(my_dim)
     {
+        // check that we can, in fact, represent the number of observations in the specified AnnoyIndex_ type.
+        sanisizer::cast<AnnoyIndex_>(sanisizer::attest_gez(my_obs));
+
         auto work = data.new_known_extractor();
         if constexpr(std::is_same<Data_, AnnoyData_>::value) {
             for (Index_ i = 0; i < my_obs; ++i) {
@@ -236,7 +264,7 @@ public:
                 my_index.add_item(i, ptr);
             }
         } else {
-            std::vector<AnnoyData_> incoming(my_dim);
+            auto incoming = sanisizer::create<std::vector<AnnoyData_> >(my_dim);
             for (Index_ i = 0; i < my_obs; ++i) {
                 auto ptr = work->next();
                 std::copy_n(ptr, my_dim, incoming.begin());
@@ -310,8 +338,11 @@ public:
 
         // Not bothering to save anything else; the RNG and thread policy
         // should not be relevant once the index is built.
+
+        // For reasons unknown to us, AnnoyIndex::save() is not const, so we have to do it manually.
+        // Hopefully this will be fixed in the future.
         const auto idxpath = prefix + "index";
-        knncolle::quick_save(idxpath, reinterpret_cast<char*>(my_index.get_nodes()), static_cast<std::size_t>(my_index.get_s()) * my_index.get_n_nodes());
+        knncolle::quick_save(idxpath, reinterpret_cast<char*>(my_index.get_nodes()), sanisizer::product<std::streamsize>(my_index.get_s(), my_index.get_n_nodes()));
     }
 
     AnnoyPrebuilt(const std::string prefix, std::size_t ndim) : my_dim(ndim), my_index(ndim) {

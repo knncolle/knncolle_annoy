@@ -23,10 +23,11 @@ if(KNNCOLLE_ANNOY_FETCH_EXTERN)
     add_subdirectory(extern)
 else()
     find_package(knncolle_knncolle 3.0.0 CONFIG REQUIRED)
+    find_package(ltla_sanisizer 0.1.0 CONFIG REQUIRED)
     find_package(Annoy CONFIG REQUIRED)
 endif()
 
-target_link_libraries(knncolle_annoy INTERFACE knncolle::knncolle Annoy::Annoy)
+target_link_libraries(knncolle_annoy INTERFACE knncolle::knncolle ltla::sanisizer Annoy::Annoy)
 
 # Tests
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
