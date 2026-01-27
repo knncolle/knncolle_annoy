@@ -328,9 +328,9 @@ public:
         knncolle::quick_save(prefix + "num_dim", &my_dim, 1);
         knncolle::quick_save(prefix + "search_mult", &my_search_mult, 1);
 
-        NumericType types[2];
-        types[0] = get_numeric_type<AnnoyIndex_>();
-        types[1] = get_numeric_type<AnnoyData_>();
+        knncolle::NumericType types[2];
+        types[0] = knncolle::get_numeric_type<AnnoyIndex_>();
+        types[1] = knncolle::get_numeric_type<AnnoyData_>();
         knncolle::quick_save(prefix + "types", types, 2);
 
         const auto dname = get_distance_name<AnnoyDistance_>();

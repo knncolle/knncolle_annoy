@@ -26,12 +26,12 @@ struct AnnoyPrebuiltTypes {
     /**
      * Type of the index, i.e., `AnnoyIndex_` in `AnnoyBuilder()`.
      */
-    NumericType index;
+    knncolle::NumericType index;
 
     /**
      * Type of the data, i.e., `AnnoyData_` in `AnnoyBuilder()`.
      */
-    NumericType data;
+    knncolle::NumericType data;
 
     /**
      * Name of the distance metric, i.e., `AnnoyDistance_` in `AnnoyBuilder()`.
@@ -47,7 +47,7 @@ struct AnnoyPrebuiltTypes {
  * This is typically used to choose template parameters for `load_annoy_prebuilt()`.
  */
 inline AnnoyPrebuiltTypes load_annoy_prebuilt_types(const std::string& prefix) {
-    NumericType types[2];
+    knncolle::NumericType types[2];
     knncolle::quick_load(prefix + "types", types, 2);
 
     AnnoyPrebuiltTypes config;
@@ -61,15 +61,16 @@ inline AnnoyPrebuiltTypes load_annoy_prebuilt_types(const std::string& prefix) {
 /**
  * Helper function to define a `knncolle::LoadPrebuiltFunction` for Annoy in `knncolle::load_prebuilt()`.
  *
- * In an Annoy-specific `knncolle::LoadPrebuiltFunction`,
- * users should first call `load_annoy_prebuilt_types()` to figure out the saved index's `AnnoyDistance_`, `AnnoyIndex` and `AnnoyData_`.
- * Then, they can call `load_annoy_prebuilt()` with the specified types to return a pointer to a `knncolle::Prebuilt` object.
- * This can be registered in `load_prebuilt_registry()` with the key in `knncolle_annoy::save_name`.
+ * To load an Annoy index from disk, users are expected to define and register an Annoy-specific `knncolle::LoadPrebuiltFunction`.
+ * In this function, users should first call `load_annoy_prebuilt_types()` to figure out the saved index's `AnnoyDistance_`, `AnnoyIndex` and `AnnoyData_`.
+ * Then, they should call `load_annoy_prebuilt()` with the appropriate types to return a pointer to a `knncolle::Prebuilt` object.
+ * This user-defined function should be registered in `load_prebuilt_registry()` with the key in `knncolle_annoy::save_name`.
  * 
- * We do not automatically register a function as the user is responsible for deciding what types should be handled.
- * This avoids binary bloat from repeated instantiations of the Annoy template classes for every possible combination of types.
- * Instead, the user chooses which combinations of types can be loaded, e.g., if their application only deals with those combinations. 
- * Users may also have more information to handle unknown types from `get_numeric_type()` or unknown distances from `get_distance_name()`.
+ * We do not define a default function for loading Annoy indices as there are too many possible combinations of types.
+ * Instead, the user is responsible for deciding which combinations of types should be handled.
+ * This avoids binary bloat from repeated instantiations of the Annoy template classes, if an application only deals with a certain subset of combinations. 
+ * For types or distances that are unknown to `knncolle::get_numeric_type()` or `get_distance_name()`, respectively,
+ * users can store additional information on disk via `customize_save_for_annoy_types()` for use in loading.
  * 
  * @tparam Index_ Integer type for the observation indices.
  * @tparam Data_ Numeric type for the input and query data.
