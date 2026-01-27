@@ -15,8 +15,8 @@ FetchContent_Declare(
 
 FetchContent_Declare(
   Annoy 
-  GIT_REPOSITORY https://github.com/spotify/Annoy
-  GIT_TAG main # ^1.17.0
+  GIT_REPOSITORY https://github.com/LTLA/Annoy
+  GIT_TAG warnings # ^1.17.0
 )
 
 FetchContent_MakeAvailable(knncolle)
