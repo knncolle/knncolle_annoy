@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['index_0',['index',['../structknncolle__annoy_1_1PrebuiltSaveConfig.html#a28f36ec21f626ad20b19368475240d73',1,'knncolle_annoy::PrebuiltSaveConfig']]],
+  ['index_0',['index',['../structknncolle__annoy_1_1AnnoyPrebuiltTypes.html#a3ebbe427960efa7d30fa5ffd80bdfe1b',1,'knncolle_annoy::AnnoyPrebuiltTypes']]],
   ['indices_1',['Saving and reloading indices',['../index.html#autotoc_md4',1,'']]],
   ['initialize_2',['initialize',['https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html#aacc8819b7962ce27294cf0d42f6c6e68',1,'knncolle::Prebuilt']]],
   ['initialize_5fknown_3',['initialize_known',['https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html#a49d2dbfc4a463c396842875f26746ac4',1,'knncolle::Prebuilt']]],

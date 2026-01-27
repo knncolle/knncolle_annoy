@@ -13,13 +13,13 @@
     <path>/github/workspace/include/knncolle_annoy/</path>
     <filename>load__annoy__prebuilt_8hpp.html</filename>
     <includes id="utils_8hpp" name="utils.hpp" local="yes" import="no" module="no" objc="no">utils.hpp</includes>
+    <class kind="struct">knncolle_annoy::AnnoyPrebuiltTypes</class>
     <namespace>knncolle_annoy</namespace>
   </compound>
   <compound kind="file">
     <name>utils.hpp</name>
     <path>/github/workspace/include/knncolle_annoy/</path>
     <filename>utils_8hpp.html</filename>
-    <class kind="struct">knncolle_annoy::PrebuiltSaveConfig</class>
     <namespace>knncolle_annoy</namespace>
   </compound>
   <compound kind="class">
@@ -97,27 +97,27 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>knncolle_annoy::PrebuiltSaveConfig</name>
-    <filename>structknncolle__annoy_1_1PrebuiltSaveConfig.html</filename>
+    <name>knncolle_annoy::AnnoyPrebuiltTypes</name>
+    <filename>structknncolle__annoy_1_1AnnoyPrebuiltTypes.html</filename>
     <member kind="variable">
       <type>NumericType</type>
       <name>index</name>
-      <anchorfile>structknncolle__annoy_1_1PrebuiltSaveConfig.html</anchorfile>
-      <anchor>a28f36ec21f626ad20b19368475240d73</anchor>
+      <anchorfile>structknncolle__annoy_1_1AnnoyPrebuiltTypes.html</anchorfile>
+      <anchor>a3ebbe427960efa7d30fa5ffd80bdfe1b</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>NumericType</type>
       <name>data</name>
-      <anchorfile>structknncolle__annoy_1_1PrebuiltSaveConfig.html</anchorfile>
-      <anchor>a7504e43b372b437bc1940397bf550086</anchor>
+      <anchorfile>structknncolle__annoy_1_1AnnoyPrebuiltTypes.html</anchorfile>
+      <anchor>a189a767607a3b01f203ec7eb312f883e</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>std::string</type>
       <name>distance</name>
-      <anchorfile>structknncolle__annoy_1_1PrebuiltSaveConfig.html</anchorfile>
-      <anchor>a509ca03b8cb13c972f16d4b82f8e547e</anchor>
+      <anchorfile>structknncolle__annoy_1_1AnnoyPrebuiltTypes.html</anchorfile>
+      <anchor>a06aaf2f6d1337bf71175ffc35a45ded2</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -126,7 +126,7 @@
     <filename>namespaceknncolle__annoy.html</filename>
     <class kind="class">knncolle_annoy::AnnoyBuilder</class>
     <class kind="struct">knncolle_annoy::AnnoyOptions</class>
-    <class kind="struct">knncolle_annoy::PrebuiltSaveConfig</class>
+    <class kind="struct">knncolle_annoy::AnnoyPrebuiltTypes</class>
     <member kind="enumeration">
       <type></type>
       <name>NumericType</name>
@@ -159,6 +159,13 @@
       <enumvalue file="namespaceknncolle__annoy.html" anchor="ab5b68f6564b16322f9b231b4548ecd0ca696b031073e74bf2cb98e5ef201d4aa3">UNKNOWN</enumvalue>
     </member>
     <member kind="function">
+      <type>AnnoyPrebuiltTypes</type>
+      <name>load_annoy_prebuilt_types</name>
+      <anchorfile>namespaceknncolle__annoy.html</anchorfile>
+      <anchor>a57a33c712b732200c7b46d36f13bfb78</anchor>
+      <arglist>(const std::string &amp;prefix)</arglist>
+    </member>
+    <member kind="function">
       <type>auto</type>
       <name>load_annoy_prebuilt</name>
       <anchorfile>namespaceknncolle__annoy.html</anchorfile>
@@ -178,13 +185,6 @@
       <anchorfile>namespaceknncolle__annoy.html</anchorfile>
       <anchor>a5a77303e4f9434ddc0218aa14b19f1fb</anchor>
       <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>PrebuiltSaveConfig</type>
-      <name>scan_prebuilt_save_config</name>
-      <anchorfile>namespaceknncolle__annoy.html</anchorfile>
-      <anchor>a50ce8ca5c3c5ae8fa68bc34a67f092d9</anchor>
-      <arglist>(const std::string &amp;prefix)</arglist>
     </member>
     <member kind="function">
       <type>std::function&lt; void(const std::string &amp;)&gt; &amp;</type>
