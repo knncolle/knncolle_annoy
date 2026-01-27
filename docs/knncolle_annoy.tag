@@ -13,7 +13,6 @@
     <path>/github/workspace/include/knncolle_annoy/</path>
     <filename>load__annoy__prebuilt_8hpp.html</filename>
     <includes id="utils_8hpp" name="utils.hpp" local="yes" import="no" module="no" objc="no">utils.hpp</includes>
-    <includes id="knncolle__annoy_8hpp" name="knncolle_annoy.hpp" local="yes" import="no" module="no" objc="no">knncolle_annoy.hpp</includes>
     <namespace>knncolle_annoy</namespace>
   </compound>
   <compound kind="file">
