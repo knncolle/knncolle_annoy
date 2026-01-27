@@ -62,15 +62,17 @@ inline AnnoyPrebuiltTypes load_annoy_prebuilt_types(const std::string& prefix) {
  * Helper function to define a `knncolle::LoadPrebuiltFunction` for Annoy in `knncolle::load_prebuilt()`.
  *
  * To load an Annoy index from disk, users are expected to define and register an Annoy-specific `knncolle::LoadPrebuiltFunction`.
- * In this function, users should first call `load_annoy_prebuilt_types()` to figure out the saved index's `AnnoyDistance_`, `AnnoyIndex` and `AnnoyData_`.
+ * In this function, users should call `load_annoy_prebuilt_types()` to figure out the saved index's `AnnoyDistance_`, `AnnoyIndex` and `AnnoyData_`.
  * Then, they should call `load_annoy_prebuilt()` with the appropriate types to return a pointer to a `knncolle::Prebuilt` object.
  * This user-defined function should be registered in `load_prebuilt_registry()` with the key in `knncolle_annoy::save_name`.
  * 
  * We do not define a default function for loading Annoy indices as there are too many possible combinations of types.
  * Instead, the user is responsible for deciding which combinations of types should be handled.
- * This avoids binary bloat from repeated instantiations of the Annoy template classes, if an application only deals with a certain subset of combinations. 
- * For types or distances that are unknown to `knncolle::get_numeric_type()` or `get_distance_name()`, respectively,
- * users can store additional information on disk via `customize_save_for_annoy_types()` for use in loading.
+ * This avoids binary bloat from repeated instantiations of the Annoy template classes, if the user's application only deals with a certain subset of combinations. 
+ *
+ * For unknown types or distances, users can set `custom_save_for_annoy_index()`, `custom_save_for_annoy_data()` and/or `custom_save_for_annoy_distance()`.
+ * Each custom function saves additional information about its type to disk during a `knncolle::Prebuilt::save()` call.
+ * That information can then be parsed in the user-defined `knncolle::LoadPrebuiltFunction` to recover an Annoy index with the appropriate template types.
  * 
  * @tparam Index_ Integer type for the observation indices.
  * @tparam Data_ Numeric type for the input and query data.

@@ -75,9 +75,14 @@ TEST_F(AnnoyLoadPrebuiltTest, Manhattan) {
 }
 
 TEST_F(AnnoyLoadPrebuiltTest, Custom) {
-    auto& cust = knncolle_annoy::customize_save_for_annoy_types<Annoy::Euclidean, int, float>();
-    cust = [](const std::string& prefix) -> void {
+    knncolle_annoy::custom_save_for_annoy_index<int>() = [](const std::string& prefix) -> void {
         knncolle::quick_save(prefix + "FOO", "bar", 3);
+    };
+    knncolle_annoy::custom_save_for_annoy_data<float>() = [](const std::string& prefix) -> void {
+        knncolle::quick_save(prefix + "WHEE", "stuff", 5);
+    };
+    knncolle_annoy::custom_save_for_annoy_distance<Annoy::Euclidean>() = [](const std::string& prefix) -> void {
+        knncolle::quick_save(prefix + "YAY", "blah", 4);
     };
 
     knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Euclidean> ab;
@@ -88,7 +93,12 @@ TEST_F(AnnoyLoadPrebuiltTest, Custom) {
 
     // Custom function is respected.
     EXPECT_EQ(knncolle::quick_load_as_string(prefix + "FOO"), "bar");
-    cust = nullptr;
+    EXPECT_EQ(knncolle::quick_load_as_string(prefix + "WHEE"), "stuff");
+    EXPECT_EQ(knncolle::quick_load_as_string(prefix + "YAY"), "blah");
+
+    knncolle_annoy::custom_save_for_annoy_index<int>() = nullptr;
+    knncolle_annoy::custom_save_for_annoy_data<float>() = nullptr;
+    knncolle_annoy::custom_save_for_annoy_distance<Annoy::Euclidean>() = nullptr;
 
     // Everything else is still fine.
     auto reloaded = knncolle::load_prebuilt_shared<int, double, double>(prefix);
