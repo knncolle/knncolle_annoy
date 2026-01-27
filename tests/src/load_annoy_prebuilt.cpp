@@ -23,7 +23,7 @@ protected:
 
         auto& reg = knncolle::load_prebuilt_registry<int, double, double>();
         reg[knncolle_annoy::save_name] = [](const std::string& prefix) -> knncolle::Prebuilt<int, double, double>* {
-            auto scanned = knncolle_annoy::scan_prebuilt_save_config(prefix);
+            auto scanned = knncolle_annoy::load_annoy_prebuilt_types(prefix);
             if (std::strcmp(scanned.distance.c_str(), "euclidean") == 0) {
                 return knncolle_annoy::load_annoy_prebuilt<int, double, double, Annoy::Euclidean>(prefix);
             }

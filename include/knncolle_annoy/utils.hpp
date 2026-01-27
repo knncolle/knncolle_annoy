@@ -187,47 +187,6 @@ NumericType get_numeric_type() {
 }
 
 /**
- * @brief Configuration of a saved Annoy index.
- *
- * Instances are typically created by `scan_prebuilt_save_config()`.
- */
-struct PrebuiltSaveConfig {
-    /**
-     * Type of the index, i.e., `AnnoyIndex_` in `AnnoyBuilder()`.
-     */
-    NumericType index;
-
-    /**
-     * Type of the index, i.e., `AnnoyData_` in `AnnoyBuilder()`.
-     */
-    NumericType data;
-
-    /**
-     * Name of the distance metric, i.e., `AnnoyDistance_` in `AnnoyBuilder()`.
-     */
-    std::string distance;
-};
-
-/**
- * @param prefix Prefix of the file paths in which a prebuilt Annoy index was saved.
- * An Annoy index is typically saved by calling the `knncolle::Prebuilt::save()` method of the Annoy subclass instance.
- *
- * @return Configuration of the saved instance of a `knncolle::Prebuilt` Annoy subclass.
- * This is typically used to choose template parameters for `load_annoy_prebuilt()`.
- */
-inline PrebuiltSaveConfig scan_prebuilt_save_config(const std::string& prefix) {
-    NumericType types[2];
-    knncolle::quick_load(prefix + "types", types, 2);
-
-    PrebuiltSaveConfig config;
-    config.index = types[0];
-    config.data = types[1];
-    config.distance = knncolle::quick_load_as_string(prefix + "distance");
-
-    return config;
-}
-
-/**
  * Define a customized saving function to preserve type information from the Annoy index in `knncolle::Prebuilt::save()`.
  * Users can provide their own function here, to handle types that are unknown to `get_numeric_type()` or `get_distance_name()`.
  * Any modifications to this function are not thread-safe and should be done in a serial section. 
