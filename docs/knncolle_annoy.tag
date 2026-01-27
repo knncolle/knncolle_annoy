@@ -150,9 +150,23 @@
     </member>
     <member kind="function">
       <type>std::function&lt; void(const std::string &amp;)&gt; &amp;</type>
-      <name>customize_save_for_annoy_types</name>
+      <name>custom_save_for_annoy_index</name>
       <anchorfile>namespaceknncolle__annoy.html</anchorfile>
-      <anchor>a46b2125811a26fae459c4c54803be3ae</anchor>
+      <anchor>a006988a9f533b84711821cd524a80db9</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>std::function&lt; void(const std::string &amp;)&gt; &amp;</type>
+      <name>custom_save_for_annoy_data</name>
+      <anchorfile>namespaceknncolle__annoy.html</anchorfile>
+      <anchor>acf44a3fe6882f4a5acba1a78353812cd</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>std::function&lt; void(const std::string &amp;)&gt; &amp;</type>
+      <name>custom_save_for_annoy_distance</name>
+      <anchorfile>namespaceknncolle__annoy.html</anchorfile>
+      <anchor>a7316f370cf35287d8f26edebe02df4ed</anchor>
       <arglist>()</arglist>
     </member>
   </compound>

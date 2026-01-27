@@ -4,5 +4,7 @@ var searchData=
   ['cap_5fk_1',['cap_k',['https://knncolle.github.io/knncolle/namespaceknncolle.html#a926c81cd626de7081b073a891d352543',1,'knncolle']]],
   ['cap_5fk_5fquery_2',['cap_k_query',['https://knncolle.github.io/knncolle/namespaceknncolle.html#a918d96e82ead9e67d7c008bde1e22505',1,'knncolle']]],
   ['count_5fall_5fneighbors_5fwithout_5fself_3',['count_all_neighbors_without_self',['https://knncolle.github.io/knncolle/namespaceknncolle.html#ab636bced615a3a669ef0e207b5d848cc',1,'knncolle']]],
-  ['customize_5fsave_5ffor_5fannoy_5ftypes_4',['customize_save_for_annoy_types',['../namespaceknncolle__annoy.html#a46b2125811a26fae459c4c54803be3ae',1,'knncolle_annoy']]]
+  ['custom_5fsave_5ffor_5fannoy_5fdata_4',['custom_save_for_annoy_data',['../namespaceknncolle__annoy.html#acf44a3fe6882f4a5acba1a78353812cd',1,'knncolle_annoy']]],
+  ['custom_5fsave_5ffor_5fannoy_5fdistance_5',['custom_save_for_annoy_distance',['../namespaceknncolle__annoy.html#a7316f370cf35287d8f26edebe02df4ed',1,'knncolle_annoy']]],
+  ['custom_5fsave_5ffor_5fannoy_5findex_6',['custom_save_for_annoy_index',['../namespaceknncolle__annoy.html#a006988a9f533b84711821cd524a80db9',1,'knncolle_annoy']]]
 ];
