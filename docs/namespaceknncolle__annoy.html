@@ -88,7 +88,6 @@ $(function(){ initResizable(false); });
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">knncolle_annoy Namespace Reference</div></div>
 </div><!--header-->
@@ -109,42 +108,6 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template types of a saved Annoy index.  <a href="structknncolle__annoy_1_1AnnoyPrebuiltTypes.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:ab5b68f6564b16322f9b231b4548ecd0c" id="r_ab5b68f6564b16322f9b231b4548ecd0c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5b68f6564b16322f9b231b4548ecd0c">NumericType</a> : char { <br />
-&#160;&#160;<b>UINT8_T</b>
-, <b>INT8_T</b>
-, <b>UINT16_T</b>
-, <b>INT16_T</b>
-, <br />
-&#160;&#160;<b>UINT32_T</b>
-, <b>INT32_T</b>
-, <b>UINT64_T</b>
-, <b>INT64_T</b>
-, <br />
-&#160;&#160;<b>UNSIGNED_CHAR</b>
-, <b>SIGNED_CHAR</b>
-, <b>CHAR</b>
-, <b>UNSIGNED_SHORT</b>
-, <br />
-&#160;&#160;<b>SHORT</b>
-, <b>UNSIGNED_INT</b>
-, <b>INT</b>
-, <b>UNSIGNED_LONG</b>
-, <br />
-&#160;&#160;<b>LONG</b>
-, <b>UNSIGNED_LONG_LONG</b>
-, <b>LONG_LONG</b>
-, <b>SIZE_T</b>
-, <br />
-&#160;&#160;<b>PTRDIFF_T</b>
-, <b>FLOAT</b>
-, <b>DOUBLE</b>
-, <b>UNKNOWN</b>
-<br />
- }</td></tr>
-<tr class="separator:ab5b68f6564b16322f9b231b4548ecd0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a57a33c712b732200c7b46d36f13bfb78" id="r_a57a33c712b732200c7b46d36f13bfb78"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structknncolle__annoy_1_1AnnoyPrebuiltTypes.html">AnnoyPrebuiltTypes</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a57a33c712b732200c7b46d36f13bfb78">load_annoy_prebuilt_types</a> (const std::string &amp;prefix)</td></tr>
@@ -155,40 +118,13 @@ Functions</h2></td></tr>
 <tr class="memitem:a0f46fd7ab22d7976baec00c98c038bea" id="r_a0f46fd7ab22d7976baec00c98c038bea"><td class="memTemplParams" colspan="2">template&lt;typename AnnoyDistance_ &gt; </td></tr>
 <tr class="memitem:a0f46fd7ab22d7976baec00c98c038bea"><td class="memTemplItemLeft" align="right" valign="top">const char *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a0f46fd7ab22d7976baec00c98c038bea">get_distance_name</a> ()</td></tr>
 <tr class="separator:a0f46fd7ab22d7976baec00c98c038bea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a77303e4f9434ddc0218aa14b19f1fb" id="r_a5a77303e4f9434ddc0218aa14b19f1fb"><td class="memTemplParams" colspan="2">template&lt;typename Type_ &gt; </td></tr>
-<tr class="memitem:a5a77303e4f9434ddc0218aa14b19f1fb"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="#ab5b68f6564b16322f9b231b4548ecd0c">NumericType</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a5a77303e4f9434ddc0218aa14b19f1fb">get_numeric_type</a> ()</td></tr>
-<tr class="separator:a5a77303e4f9434ddc0218aa14b19f1fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46b2125811a26fae459c4c54803be3ae" id="r_a46b2125811a26fae459c4c54803be3ae"><td class="memTemplParams" colspan="2">template&lt;class AnnoyDistance_ , typename AnnoyIndex_ , typename AnnoyData_ &gt; </td></tr>
 <tr class="memitem:a46b2125811a26fae459c4c54803be3ae"><td class="memTemplItemLeft" align="right" valign="top">std::function&lt; void(const std::string &amp;)&gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a46b2125811a26fae459c4c54803be3ae">customize_save_for_annoy_types</a> ()</td></tr>
 <tr class="separator:a46b2125811a26fae459c4c54803be3ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Approximate nearest neighbor search with Annoy. </p>
-</div><h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="ab5b68f6564b16322f9b231b4548ecd0c" name="ab5b68f6564b16322f9b231b4548ecd0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5b68f6564b16322f9b231b4548ecd0c">&#9670;&#160;</a></span>NumericType</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="#ab5b68f6564b16322f9b231b4548ecd0c">knncolle_annoy::NumericType</a> : char</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Numeric types for <code>AnnoyIndex_</code> and <code>AnnoyData_</code> template parameters of <code><a class="el" href="classknncolle__annoy_1_1AnnoyBuilder.html" title="Perform an approximate nearest neighbor search with Annoy.">AnnoyBuilder</a></code>. These are typically set by <code><a class="el" href="#a5a77303e4f9434ddc0218aa14b19f1fb">get_numeric_type()</a></code>. </p>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="a46b2125811a26fae459c4c54803be3ae" name="a46b2125811a26fae459c4c54803be3ae"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a46b2125811a26fae459c4c54803be3ae">&#9670;&#160;</a></span>customize_save_for_annoy_types()</h2>
 
@@ -205,7 +141,7 @@ template&lt;class AnnoyDistance_ , typename AnnoyIndex_ , typename AnnoyData_ &g
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Define a customized saving function to preserve type information from the Annoy index in <code><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html#a87930f878bf3a22297b851173caaf893">knncolle::Prebuilt::save()</a></code>. Users can provide their own function here, to handle types that are unknown to <code><a class="el" href="#a5a77303e4f9434ddc0218aa14b19f1fb">get_numeric_type()</a></code> or <code><a class="el" href="#a0f46fd7ab22d7976baec00c98c038bea">get_distance_name()</a></code>. Any modifications to this function are not thread-safe and should be done in a serial section.</p>
+<p>Define a customized saving function to preserve type information from the Annoy index in <code><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html#a87930f878bf3a22297b851173caaf893">knncolle::Prebuilt::save()</a></code>. Users can provide their own function here, to handle types that are unknown to <code><a class="elRef" href="https://knncolle.github.io/knncolle/namespaceknncolle.html#a84e640363d9246c58008c93166021f26">knncolle::get_numeric_type()</a></code> or <code><a class="el" href="#a0f46fd7ab22d7976baec00c98c038bea">get_distance_name()</a></code>. Any modifications to this function are not thread-safe and should be done in a serial section.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">AnnoyDistance_</td><td>An <b>Annoy</b>-compatible class to compute the distance between vectors. </td></tr>
@@ -245,33 +181,6 @@ template&lt;typename AnnoyDistance_ &gt; </div>
 
 </div>
 </div>
-<a id="a5a77303e4f9434ddc0218aa14b19f1fb" name="a5a77303e4f9434ddc0218aa14b19f1fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a77303e4f9434ddc0218aa14b19f1fb">&#9670;&#160;</a></span>get_numeric_type()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Type_ &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ab5b68f6564b16322f9b231b4548ecd0c">NumericType</a> knncolle_annoy::get_numeric_type </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Type_</td><td>Some integer or floating-point type, typically used as <code>AnnoyIndex_</code> or <code>AnnoyData_</code> in <code>AnnoyBuilder()</code>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Identity of the numeric type.</dd></dl>
-<p>For unknown types, consider using <code><a class="el" href="#a46b2125811a26fae459c4c54803be3ae">customize_save_for_annoy_types()</a></code> to add more information to the on-disk representation during a <code><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html#a87930f878bf3a22297b851173caaf893">knncolle::Prebuilt::save()</a></code> call. </p>
-
-</div>
-</div>
 <a id="a480d8350b6c83729f140253ee3ca64cb" name="a480d8350b6c83729f140253ee3ca64cb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a480d8350b6c83729f140253ee3ca64cb">&#9670;&#160;</a></span>load_annoy_prebuilt()</h2>
 
@@ -289,8 +198,8 @@ template&lt;typename Index_ , typename Data_ , typename Distance_ , class AnnoyD
       </table>
 </div><div class="memdoc">
 <p>Helper function to define a <code><a class="elRef" href="https://knncolle.github.io/knncolle/namespaceknncolle.html#af5bf682899b815f8e1d4a4c6ef80408a">knncolle::LoadPrebuiltFunction</a></code> for Annoy in <code>knncolle::load_prebuilt()</code>.</p>
-<p>In an Annoy-specific <code><a class="elRef" href="https://knncolle.github.io/knncolle/namespaceknncolle.html#af5bf682899b815f8e1d4a4c6ef80408a">knncolle::LoadPrebuiltFunction</a></code>, users should first call <code><a class="el" href="#a57a33c712b732200c7b46d36f13bfb78">load_annoy_prebuilt_types()</a></code> to figure out the saved index's <code>AnnoyDistance_</code>, <code>AnnoyIndex</code> and <code>AnnoyData_</code>. Then, they can call <code><a class="el" href="#a480d8350b6c83729f140253ee3ca64cb">load_annoy_prebuilt()</a></code> with the specified types to return a pointer to a <code><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html">knncolle::Prebuilt</a></code> object. This can be registered in <code>load_prebuilt_registry()</code> with the key in <code>knncolle_annoy::save_name</code>.</p>
-<p>We do not automatically register a function as the user is responsible for deciding what types should be handled. This avoids binary bloat from repeated instantiations of the Annoy template classes for every possible combination of types. Instead, the user chooses which combinations of types can be loaded, e.g., if their application only deals with those combinations. Users may also have more information to handle unknown types from <code><a class="el" href="#a5a77303e4f9434ddc0218aa14b19f1fb">get_numeric_type()</a></code> or unknown distances from <code><a class="el" href="#a0f46fd7ab22d7976baec00c98c038bea">get_distance_name()</a></code>.</p>
+<p>To load an Annoy index from disk, users are expected to define and register an Annoy-specific <code><a class="elRef" href="https://knncolle.github.io/knncolle/namespaceknncolle.html#af5bf682899b815f8e1d4a4c6ef80408a">knncolle::LoadPrebuiltFunction</a></code>. In this function, users should first call <code><a class="el" href="#a57a33c712b732200c7b46d36f13bfb78">load_annoy_prebuilt_types()</a></code> to figure out the saved index's <code>AnnoyDistance_</code>, <code>AnnoyIndex</code> and <code>AnnoyData_</code>. Then, they should call <code><a class="el" href="#a480d8350b6c83729f140253ee3ca64cb">load_annoy_prebuilt()</a></code> with the appropriate types to return a pointer to a <code><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html">knncolle::Prebuilt</a></code> object. This user-defined function should be registered in <code>load_prebuilt_registry()</code> with the key in <code>knncolle_annoy::save_name</code>.</p>
+<p>We do not define a default function for loading Annoy indices as there are too many possible combinations of types. Instead, the user is responsible for deciding which combinations of types should be handled. This avoids binary bloat from repeated instantiations of the Annoy template classes, if an application only deals with a certain subset of combinations. For types or distances that are unknown to <code><a class="elRef" href="https://knncolle.github.io/knncolle/namespaceknncolle.html#a84e640363d9246c58008c93166021f26">knncolle::get_numeric_type()</a></code> or <code><a class="el" href="#a0f46fd7ab22d7976baec00c98c038bea">get_distance_name()</a></code>, respectively, users can store additional information on disk via <code><a class="el" href="#a46b2125811a26fae459c4c54803be3ae">customize_save_for_annoy_types()</a></code> for use in loading.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Index_</td><td>Integer type for the observation indices. </td></tr>

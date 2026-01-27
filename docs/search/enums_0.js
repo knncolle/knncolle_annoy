@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['numerictype_0',['NumericType',['../namespaceknncolle__annoy.html#ab5b68f6564b16322f9b231b4548ecd0c',1,'knncolle_annoy']]]
+  ['numerictype_0',['NumericType',['https://knncolle.github.io/knncolle/namespaceknncolle.html#a9aa73a4ad540791a911eb9fa64b51de3',1,'knncolle']]]
 ];
