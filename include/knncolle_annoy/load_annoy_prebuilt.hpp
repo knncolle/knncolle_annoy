@@ -2,7 +2,7 @@
 #define KNNCOLLE_ANNOY_LOAD_PREBUILT_HPP
 
 #include "utils.hpp"
-#include "knncolle_annoy.hpp"
+#include "Annoy.hpp"
 
 #include <cstddef>
 #include <stdexcept>
