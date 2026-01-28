@@ -167,12 +167,12 @@ Customizing the search</h1>
 <div class="line">&gt; MyAnnoyBuilder;</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md4"></a>
 Saving and reloading indices</h1>
-<p>To save and reload Annoy indices from disk, we need to register a loading function into <b>knncolle</b>'s <code>load_prebuilt()</code> registry. This is a little complicated as we must decide on which combinations of types and distances we want to deal with. Here, we only consider the obvious distance metrics and the defaults for the internal Annoy types, though more combinations could also be supported at the cost of larger binaries and longer compile times.</p>
+<p>To save and reload Annoy indices from disk, we need to register a loading function into <b>knncolle</b>'s <code>load_prebuilt()</code> registry. This is a little complicated as we must decide on which combinations of types and distances we want to deal with. In the example below, we only consider the obvious distance metrics and the defaults for the internal Annoy types, though more combinations could also be supported at the cost of larger binaries and longer compile times.</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span>&amp; reg = <a class="code hl_functionRef" href="https://knncolle.github.io/knncolle/namespaceknncolle.html#aa08de1eb1a23d5e13dc11e23ad7967ea">knncolle::load_prebuilt_registry&lt;int, double, double&gt;</a>();</div>
 <div class="line">reg[knncolle_annoy::save_name] = [](<span class="keyword">const</span> std::string&amp; prefix) -&gt; Prebuilt&lt;int, double, double&gt;* {</div>
-<div class="line">    <span class="keyword">auto</span> config = knncolle_annoy::scan_prebuilt_save_config(prefix);</div>
+<div class="line">    <span class="keyword">auto</span> config = <a class="code hl_function" href="namespaceknncolle__annoy.html#a57a33c712b732200c7b46d36f13bfb78">knncolle_annoy::load_annoy_prebuilt_types</a>(prefix);</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// Maybe add some checks that the types are as expected.</span></div>
+<div class="line">    <span class="comment">// Checks that the AnnoyIndex_ and AnnoyData_ types are the same as the defaults.</span></div>
 <div class="line">    <span class="keywordflow">if</span> (config.index != knncolle_annoy::get_numeric_type&lt;int&gt;()) {</div>
 <div class="line">        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;unexpected type for the Annoy index&quot;</span>);</div>
 <div class="line">    }</div>
@@ -188,9 +188,10 @@ Saving and reloading indices</h1>
 <div class="line">    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceknncolle__annoy.html#a480d8350b6c83729f140253ee3ca64cb">knncolle_annoy::load_annoy_prebuilt&lt;int, double, double, Annoy::Manhattan&gt;</a>();</div>
 <div class="line">};</div>
 <div class="ttc" id="anamespaceknncolle__annoy_html_a480d8350b6c83729f140253ee3ca64cb"><div class="ttname"><a href="namespaceknncolle__annoy.html#a480d8350b6c83729f140253ee3ca64cb">knncolle_annoy::load_annoy_prebuilt</a></div><div class="ttdeci">auto load_annoy_prebuilt(const std::string &amp;prefix)</div><div class="ttdef"><b>Definition</b> load_annoy_prebuilt.hpp:106</div></div>
+<div class="ttc" id="anamespaceknncolle__annoy_html_a57a33c712b732200c7b46d36f13bfb78"><div class="ttname"><a href="namespaceknncolle__annoy.html#a57a33c712b732200c7b46d36f13bfb78">knncolle_annoy::load_annoy_prebuilt_types</a></div><div class="ttdeci">AnnoyPrebuiltTypes load_annoy_prebuilt_types(const std::string &amp;prefix)</div><div class="ttdef"><b>Definition</b> load_annoy_prebuilt.hpp:49</div></div>
 <div class="ttc" id="anamespaceknncolle_html_aa08de1eb1a23d5e13dc11e23ad7967ea"><div class="ttname"><a href="https://knncolle.github.io/knncolle/namespaceknncolle.html#aa08de1eb1a23d5e13dc11e23ad7967ea">knncolle::load_prebuilt_registry</a></div><div class="ttdeci">std::unordered_map&lt; std::string, LoadPrebuiltFunction&lt; Index_, Data_, Distance_ &gt; &gt; &amp; load_prebuilt_registry()</div></div>
 </div><!-- fragment --><p>Then we can save and reload the <code>Prebuilt</code> Annoy indices. Note the caveats on <code><a class="elRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Prebuilt.html#a87930f878bf3a22297b851173caaf893">knncolle::Prebuilt::save()</a></code> - specifically, the files are not guaranteed to be portable between machines or even different versions of <b><a class="el" href="namespaceknncolle__annoy.html" title="Approximate nearest neighbor search with Annoy.">knncolle_annoy</a></b>.</p>
-<div class="fragment"><div class="line">std::string path_prefix = <span class="stringliteral">&quot;anno/location/here_&quot;</span>;</div>
+<div class="fragment"><div class="line">std::string path_prefix = <span class="stringliteral">&quot;annoy/location/here_&quot;</span>;</div>
 <div class="line">an_index.save(path_prefix);</div>
 <div class="line"><span class="keyword">auto</span> reloaded = knncolle::load_prebuilt(path_prefix);</div>
 </div><!-- fragment --><p>For custom Annoy-related types and distances, users can define their own saving and loading methods. For example, if we had a custom distance:</p>
@@ -199,14 +200,13 @@ Saving and reloading indices</h1>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Define a function to save information about this custom distance during .save() calls.</span></div>
 <div class="line"><a class="code hl_function" href="namespaceknncolle__annoy.html#acf44a3fe6882f4a5acba1a78353812cd">knncolle_annoy::custom_save_for_annoy_data&lt;MyCustomDistance&gt;</a>() = [](<span class="keyword">const</span> std::string&amp; prefix) -&gt; <span class="keywordtype">void</span> {</div>
-<div class="line">    <span class="keyword">const</span> <span class="keyword">auto</span> path = prefix + <span class="stringliteral">&quot;_custom&quot;</span>;</div>
-<div class="line">    <span class="comment">// write something about MyCustomDistance at &#39;path&#39;.</span></div>
+<div class="line">    <span class="keyword">const</span> <span class="keyword">auto</span> custdistpath = prefix + <span class="stringliteral">&quot;_custom&quot;</span>;</div>
+<div class="line">    <span class="comment">// write something about MyCustomDistance at &#39;custdistpath&#39;.</span></div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Make a new loading function that uses the saved custom information. </span></div>
 <div class="line">reg[knncolle_annoy::save_name] = [](<span class="keyword">const</span> std::string&amp; prefix) -&gt; Prebuilt&lt;int, double, double&gt;* {</div>
-<div class="line">    <span class="keyword">auto</span> config = knncolle_annoy::scan_prebuilt_save_config(prefix);</div>
-<div class="line"> </div>
+<div class="line">    <span class="keyword">auto</span> config = <a class="code hl_function" href="namespaceknncolle__annoy.html#a57a33c712b732200c7b46d36f13bfb78">knncolle_annoy::load_annoy_prebuilt_types</a>(prefix);</div>
 <div class="line">    <span class="keywordflow">if</span> (config.index != knncolle_annoy::get_numeric_type&lt;int&gt;()) {</div>
 <div class="line">        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;unexpected type for the Annoy index&quot;</span>);</div>
 <div class="line">    }</div>
@@ -219,13 +219,13 @@ Saving and reloading indices</h1>
 <div class="line">    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (config.distance == <span class="stringliteral">&quot;manhattan&quot;</span>) {</div>
 <div class="line">        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceknncolle__annoy.html#a480d8350b6c83729f140253ee3ca64cb">knncolle_annoy::load_annoy_prebuilt&lt;int, double, double, Annoy::Manhattan&gt;</a>();</div>
 <div class="line">    } <span class="keywordflow">else</span> {</div>
-<div class="line">        <span class="keyword">const</span> <span class="keyword">auto</span> info = prefix + <span class="stringliteral">&quot;_custom&quot;</span>;</div>
-<div class="line">        <span class="comment">// read something about the custom distance.</span></div>
+<div class="line">        <span class="keyword">const</span> <span class="keyword">auto</span> custdispath = prefix + <span class="stringliteral">&quot;_custom&quot;</span>;</div>
+<div class="line">        <span class="comment">// read something from &#39;custdistpath&#39; to determine the custom distance to use.</span></div>
 <div class="line">        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceknncolle__annoy.html#a480d8350b6c83729f140253ee3ca64cb">knncolle_annoy::load_annoy_prebuilt&lt;int, double, double, MyCustomDistance&gt;</a>();</div>
 <div class="line">    }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">std::string custom_prefix = <span class="stringliteral">&quot;anno/location/custom_&quot;</span>;</div>
+<div class="line">std::string custom_prefix = <span class="stringliteral">&quot;annoy/location/custom_&quot;</span>;</div>
 <div class="line"><a class="code hl_class" href="classknncolle__annoy_1_1AnnoyBuilder.html">knncolle_annoy::AnnoyBuilder&lt;int, double, double, MyCustomDistance&gt;</a> custom_builder;</div>
 <div class="line"><span class="keyword">auto</span> custom_index = custom_builder.<a class="code hl_functionRef" href="https://knncolle.github.io/knncolle/classknncolle_1_1Builder.html#a93cac638de3e4ad31919bc5d677d16b7">build_unique</a>(mat);</div>
 <div class="line">custom_index.save(custom_prefix);</div>
