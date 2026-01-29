@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <stdexcept>
 #include <string>
+#include <filesystem>
 
 #include "knncolle/knncolle.hpp"
 
@@ -40,26 +41,26 @@ struct AnnoyPrebuiltTypes {
 };
 
 /**
- * @param prefix Prefix of the file paths in which a prebuilt Annoy index was saved.
- * An Annoy index is typically saved by calling the `knncolle::Prebuilt::save()` method of the Annoy subclass instance.
+ * @param dir Path to a directory in which a prebuilt Annoy index was saved.
+ * An Annoy index would typically be saved by calling the `knncolle::Prebuilt::save()` method of the Annoy subclass instance.
  *
  * @return Template types of the saved instance of a `knncolle::Prebuilt` Annoy subclass.
  * This is typically used to choose template parameters for `load_annoy_prebuilt()`.
  */
-inline AnnoyPrebuiltTypes load_annoy_prebuilt_types(const std::string& prefix) {
+inline AnnoyPrebuiltTypes load_annoy_prebuilt_types(const std::filesystem::path& dir) {
     knncolle::NumericType types[2];
-    knncolle::quick_load(prefix + "types", types, 2);
+    knncolle::quick_load(dir / "TYPES", types, 2);
 
     AnnoyPrebuiltTypes config;
     config.index = types[0];
     config.data = types[1];
-    config.distance = knncolle::quick_load_as_string(prefix + "distance");
+    config.distance = knncolle::quick_load_as_string(dir / "DISTANCE");
 
     return config;
 }
 
 /**
- * Helper function to define a `knncolle::LoadPrebuiltFunction` for Annoy in `knncolle::load_prebuilt()`.
+ * Helper function to define a `knncolle::LoadPrebuiltFunction` for Annoy in `knncolle::load_prebuilt_raw()`.
  *
  * To load an Annoy index from disk, users are expected to define and register an Annoy-specific `knncolle::LoadPrebuiltFunction`.
  * In this function, users should call `load_annoy_prebuilt_types()` to figure out the saved index's `AnnoyDistance_`, `AnnoyIndex` and `AnnoyData_`.
@@ -88,8 +89,8 @@ inline AnnoyPrebuiltTypes load_annoy_prebuilt_types(const std::string& prefix) {
  * @tparam AnnoyThreadPolicy_ An **Annoy** class for the threadedness of Annoy index building.
  * This is provided for completeness and has no effect as the index is already built.
  *
- * @param prefix Prefix of the file paths in which a prebuilt Annoy index was saved.
- * An Annoy index is typically saved by calling the `knncolle::Prebuilt::save()` method of the Annoy subclass instance.
+ * @param dir Path to a directory in which a prebuilt Annoy index was saved.
+ * An Annoy index would typically be saved by calling the `knncolle::Prebuilt::save()` method of the Annoy subclass instance.
  *
  * @return Pointer to a `knncolle::Prebuilt` Annoy index.
  */
@@ -103,10 +104,10 @@ template<
     class AnnoyRng_ = Annoy::Kiss64Random,
     class AnnoyThreadPolicy_ = Annoy::AnnoyIndexSingleThreadedBuildPolicy
 >
-auto load_annoy_prebuilt(const std::string& prefix) {
+auto load_annoy_prebuilt(const std::filesystem::path& dir) {
     std::size_t ndim;
-    knncolle::quick_load(prefix + "num_dim", &ndim, 1);
-    return new AnnoyPrebuilt<Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_>(prefix, ndim);
+    knncolle::quick_load(dir / "NUM_DIM", &ndim, 1);
+    return new AnnoyPrebuilt<Index_, Data_, Distance_, AnnoyDistance_, AnnoyIndex_, AnnoyData_, AnnoyRng_, AnnoyThreadPolicy_>(dir, ndim);
 }
 
 }

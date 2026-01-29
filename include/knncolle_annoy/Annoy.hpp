@@ -8,6 +8,7 @@
 #include <cstring>
 #include <stdexcept>
 #include <limits>
+#include <filesystem>
 
 #include "knncolle/knncolle.hpp"
 #include "annoy/annoylib.h"
@@ -21,6 +22,11 @@
  */
 
 namespace knncolle_annoy {
+
+/**
+ * Name of the Annoy algorithm when registering a loading function to `knncolle::load_prebuilt_registry()`.
+ */
+inline static constexpr const char* annoy_prebuilt_save_name = "knncolle_annoy::Annoy";
 
 /**
  * @brief Options for `AnnoyBuilder()`. 
@@ -322,34 +328,34 @@ public:
     }
 
 public:
-    void save(const std::string& prefix) const {
-        knncolle::quick_save(prefix + "ALGORITHM", save_name, std::strlen(save_name));
-        knncolle::quick_save(prefix + "num_obs", &my_obs, 1);
-        knncolle::quick_save(prefix + "num_dim", &my_dim, 1);
-        knncolle::quick_save(prefix + "search_mult", &my_search_mult, 1);
+    void save(const std::filesystem::path& dir) const {
+        knncolle::quick_save(dir / "ALGORITHM", annoy_prebuilt_save_name, std::strlen(annoy_prebuilt_save_name));
+        knncolle::quick_save(dir / "NUM_OBS", &my_obs, 1);
+        knncolle::quick_save(dir / "NUM_DIM", &my_dim, 1);
+        knncolle::quick_save(dir / "SEARCH_MULT", &my_search_mult, 1);
 
         knncolle::NumericType types[2];
         types[0] = knncolle::get_numeric_type<AnnoyIndex_>();
         types[1] = knncolle::get_numeric_type<AnnoyData_>();
-        knncolle::quick_save(prefix + "types", types, 2);
+        knncolle::quick_save(dir / "TYPES", types, 2);
 
         const auto dname = get_distance_name<AnnoyDistance_>();
-        knncolle::quick_save(prefix + "distance", dname, std::strlen(dname));
+        knncolle::quick_save(dir / "DISTANCE", dname, std::strlen(dname));
 
         // Handling custom Annoy types. 
         auto& icust = custom_save_for_annoy_index<AnnoyIndex_>(); 
         if (icust) {
-            icust(prefix); 
+            icust(dir); 
         }
 
         auto& dcust = custom_save_for_annoy_data<AnnoyData_>();
         if (dcust) {
-            dcust(prefix); 
+            dcust(dir); 
         }
 
         auto& dscust = custom_save_for_annoy_distance<AnnoyDistance_>();
         if (dscust) {
-            dscust(prefix);
+            dscust(dir);
         }
 
         // Not bothering to save anything else; the RNG and thread policy
@@ -357,15 +363,15 @@ public:
 
         // For reasons unknown to us, AnnoyIndex::save() is not const, so we have to do it manually.
         // Hopefully this will be fixed in the future.
-        const auto idxpath = prefix + "index";
+        const auto idxpath = dir / "INDEX";
         knncolle::quick_save(idxpath, reinterpret_cast<char*>(my_index.get_nodes()), sanisizer::product<std::streamsize>(my_index.get_s(), my_index.get_n_nodes()));
     }
 
-    AnnoyPrebuilt(const std::string prefix, std::size_t ndim) : my_dim(ndim), my_index(ndim) {
-        knncolle::quick_load(prefix + "num_obs", &my_obs, 1);
-        knncolle::quick_load(prefix + "search_mult", &my_search_mult, 1);
+    AnnoyPrebuilt(const std::filesystem::path& dir, std::size_t ndim) : my_dim(ndim), my_index(ndim) {
+        knncolle::quick_load(dir / "NUM_OBS", &my_obs, 1);
+        knncolle::quick_load(dir / "SEARCH_MULT", &my_search_mult, 1);
 
-        const auto idxpath = prefix + "index";
+        const auto idxpath = (dir / "INDEX").string();
         char* errbuf = NULL;
         if (!my_index.load(idxpath.c_str(), true, &errbuf)) {
             std::runtime_error ex(errbuf);

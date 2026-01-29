@@ -22,12 +22,12 @@ protected:
         std::filesystem::create_directory(savedir);
 
         auto& reg = knncolle::load_prebuilt_registry<int, double, double>();
-        reg[knncolle_annoy::save_name] = [](const std::string& prefix) -> knncolle::Prebuilt<int, double, double>* {
-            auto scanned = knncolle_annoy::load_annoy_prebuilt_types(prefix);
+        reg[knncolle_annoy::annoy_prebuilt_save_name] = [](const std::filesystem::path& dir) -> knncolle::Prebuilt<int, double, double>* {
+            auto scanned = knncolle_annoy::load_annoy_prebuilt_types(dir);
             if (std::strcmp(scanned.distance.c_str(), "euclidean") == 0) {
-                return knncolle_annoy::load_annoy_prebuilt<int, double, double, Annoy::Euclidean>(prefix);
+                return knncolle_annoy::load_annoy_prebuilt<int, double, double, Annoy::Euclidean>(dir);
             }
-            return knncolle_annoy::load_annoy_prebuilt<int, double, double, Annoy::Manhattan>(prefix);
+            return knncolle_annoy::load_annoy_prebuilt<int, double, double, Annoy::Manhattan>(dir);
         };
     }
 };
@@ -36,10 +36,11 @@ TEST_F(AnnoyLoadPrebuiltTest, Euclidean) {
     knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Euclidean> ab;
     auto aptr = ab.build_unique(knncolle::SimpleMatrix<int, double>(ndim, nobs, data.data()));
 
-    const auto prefix = (savedir / "euclidean_").string();
-    aptr->save(prefix);
+    const auto dir = savedir / "euclidean";
+    std::filesystem::create_directory(dir);
+    aptr->save(dir);
 
-    auto reloaded = knncolle::load_prebuilt_shared<int, double, double>(prefix);
+    auto reloaded = knncolle::load_prebuilt_shared<int, double, double>(dir);
     std::vector<int> output_i, output_i2;
     std::vector<double> output_d, output_d2;
 
@@ -57,10 +58,11 @@ TEST_F(AnnoyLoadPrebuiltTest, Manhattan) {
     knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Manhattan> ab;
     auto aptr = ab.build_unique(knncolle::SimpleMatrix<int, double>(ndim, nobs, data.data()));
 
-    const auto prefix = (savedir / "manhattan_").string();
-    aptr->save(prefix);
+    const auto dir = savedir / "manhattan";
+    std::filesystem::create_directory(dir);
+    aptr->save(dir);
 
-    auto reloaded = knncolle::load_prebuilt_shared<int, double, double>(prefix);
+    auto reloaded = knncolle::load_prebuilt_shared<int, double, double>(dir);
     std::vector<int> output_i, output_i2;
     std::vector<double> output_d, output_d2;
 
@@ -75,33 +77,34 @@ TEST_F(AnnoyLoadPrebuiltTest, Manhattan) {
 }
 
 TEST_F(AnnoyLoadPrebuiltTest, Custom) {
-    knncolle_annoy::custom_save_for_annoy_index<int>() = [](const std::string& prefix) -> void {
-        knncolle::quick_save(prefix + "FOO", "bar", 3);
+    knncolle_annoy::custom_save_for_annoy_index<int>() = [](const std::filesystem::path& dir) -> void {
+        knncolle::quick_save(dir / "FOO", "bar", 3);
     };
-    knncolle_annoy::custom_save_for_annoy_data<float>() = [](const std::string& prefix) -> void {
-        knncolle::quick_save(prefix + "WHEE", "stuff", 5);
+    knncolle_annoy::custom_save_for_annoy_data<float>() = [](const std::filesystem::path& dir) -> void {
+        knncolle::quick_save(dir / "WHEE", "stuff", 5);
     };
-    knncolle_annoy::custom_save_for_annoy_distance<Annoy::Euclidean>() = [](const std::string& prefix) -> void {
-        knncolle::quick_save(prefix + "YAY", "blah", 4);
+    knncolle_annoy::custom_save_for_annoy_distance<Annoy::Euclidean>() = [](const std::filesystem::path& dir) -> void {
+        knncolle::quick_save(dir / "YAY", "blah", 4);
     };
 
     knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Euclidean> ab;
     auto aptr = ab.build_unique(knncolle::SimpleMatrix<int, double>(ndim, nobs, data.data()));
 
-    const auto prefix = (savedir / "custom_").string();
-    aptr->save(prefix);
+    const auto dir = savedir / "custom";
+    std::filesystem::create_directory(dir);
+    aptr->save(dir);
 
     // Custom function is respected.
-    EXPECT_EQ(knncolle::quick_load_as_string(prefix + "FOO"), "bar");
-    EXPECT_EQ(knncolle::quick_load_as_string(prefix + "WHEE"), "stuff");
-    EXPECT_EQ(knncolle::quick_load_as_string(prefix + "YAY"), "blah");
+    EXPECT_EQ(knncolle::quick_load_as_string(dir / "FOO"), "bar");
+    EXPECT_EQ(knncolle::quick_load_as_string(dir / "WHEE"), "stuff");
+    EXPECT_EQ(knncolle::quick_load_as_string(dir / "YAY"), "blah");
 
     knncolle_annoy::custom_save_for_annoy_index<int>() = nullptr;
     knncolle_annoy::custom_save_for_annoy_data<float>() = nullptr;
     knncolle_annoy::custom_save_for_annoy_distance<Annoy::Euclidean>() = nullptr;
 
     // Everything else is still fine.
-    auto reloaded = knncolle::load_prebuilt_shared<int, double, double>(prefix);
+    auto reloaded = knncolle::load_prebuilt_shared<int, double, double>(dir);
     std::vector<int> output_i, output_i2;
     std::vector<double> output_d, output_d2;
 
@@ -119,15 +122,16 @@ TEST_F(AnnoyLoadPrebuiltTest, Error) {
     knncolle_annoy::AnnoyBuilder<int, double, double, Annoy::Manhattan> ab;
     auto aptr = ab.build_unique(knncolle::SimpleMatrix<int, double>(ndim, nobs, data.data()));
 
-    const auto prefix = (savedir / "error_").string();
-    aptr->save(prefix);
+    const auto dir = savedir / "error";
+    std::filesystem::create_directory(dir);
+    aptr->save(dir);
 
     // Deleting the index. 
-    std::filesystem::remove(prefix + "index");
+    std::filesystem::remove(dir / "INDEX");
 
     bool failed = false;
     try {
-        knncolle::load_prebuilt_shared<int, double, double>(prefix);
+        knncolle::load_prebuilt_shared<int, double, double>(dir);
     } catch (std::exception& e) {
         failed = true;
     }

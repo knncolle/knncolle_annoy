@@ -94,15 +94,15 @@ typedef knncolle_annoy::AnnoyBuilder<
 
 ## Saving and reloading indices
 
-To save and reload Annoy indices from disk, we need to register a loading function into **knncolle**'s `load_prebuilt()` registry.
+To save and reload Annoy indices from disk, we need to register a loading function into **knncolle**'s `load_prebuilt_registry()`.
 This is a little complicated as we must decide on which combinations of types and distances we want to deal with.
 In the example below, we only consider the obvious distance metrics and the defaults for the internal Annoy types,
 though more combinations could also be supported at the cost of larger binaries and longer compile times.
 
 ```cpp
 auto& reg = knncolle::load_prebuilt_registry<int, double, double>();
-reg[knncolle_annoy::save_name] = [](const std::string& prefix) -> Prebuilt<int, double, double>* {
-    auto config = knncolle_annoy::load_annoy_prebuilt_types(prefix);
+reg[knncolle_annoy::save_name] = [](const std::filesystem::path& dir) -> Prebuilt<int, double, double>* {
+    auto config = knncolle_annoy::load_annoy_prebuilt_types(dir);
 
     // Checks that the AnnoyIndex_ and AnnoyData_ types are the same as the defaults.
     if (config.index != knncolle::get_numeric_type<int>()) {
@@ -113,11 +113,11 @@ reg[knncolle_annoy::save_name] = [](const std::string& prefix) -> Prebuilt<int, 
     }
 
     if (config.distance == "euclidean") {
-        return knncolle_annoy::load_annoy_prebuilt<int, double, double, Annoy::Euclidean>(prefix);
+        return knncolle_annoy::load_annoy_prebuilt<int, double, double, Annoy::Euclidean>(dir);
     } else if (config.distance != "manhattan") {
         throw std::runtime_error("unknown Annoy distance");
     }
-    return knncolle_annoy::load_annoy_prebuilt<int, double, double, Annoy::Manhattan>(prefix);
+    return knncolle_annoy::load_annoy_prebuilt<int, double, double, Annoy::Manhattan>(dir);
 };
 ```
 
@@ -126,9 +126,10 @@ Note the caveats on `knncolle::Prebuilt::save()` -
 specifically, the files are not guaranteed to be portable between machines or even different versions of **knncolle_annoy**.
 
 ```cpp
-std::string path_prefix = "annoy/location/here_";
-an_index.save(path_prefix);
-auto reloaded = knncolle::load_prebuilt(path_prefix);
+std::filesystem::path save_loc = "annoy/location/here";
+std::filesystem::create_directory(save_loc);
+an_index.save(save_loc);
+auto reloaded = knncolle::load_prebuilt_unique(save_loc);
 ```
 
 For custom Annoy-related types and distances, users can define their own saving and loading methods.
@@ -139,15 +140,15 @@ For example, if we had a custom distance:
 class MyCustomDistance : public Annoy::Euclidean {};
 
 // Define a function to save information about this custom distance during .save() calls.
-knncolle_annoy::custom_save_for_annoy_data<MyCustomDistance>() = [](const std::string& prefix) -> void {
-    const auto path = prefix + ".custom_distance";
+knncolle_annoy::custom_save_for_annoy_data<MyCustomDistance>() = [](const std::filesystem::path& dir) -> void {
+    const auto path = dir / "custom_distance";
     const std::string msg = "hi this is a custom distance";
     knncolle::quick_save(path, msg.c_str(), msg.size());
 };
 
 // Make a new loading function that uses the saved custom information. 
-reg[knncolle_annoy::save_name] = [](const std::string& prefix) -> Prebuilt<int, double, double>* {
-    auto config = knncolle_annoy::load_annoy_prebuilt_types(prefix);
+reg[knncolle_annoy::save_name] = [](const std::filesystem::path& dir) -> Prebuilt<int, double, double>* {
+    auto config = knncolle_annoy::load_annoy_prebuilt_types(dir);
     if (config.index != knncolle::get_numeric_type<int>()) {
         throw std::runtime_error("unexpected type for the Annoy index");
     }
@@ -156,24 +157,24 @@ reg[knncolle_annoy::save_name] = [](const std::string& prefix) -> Prebuilt<int, 
     }
 
     if (config.distance == "euclidean") {
-        return knncolle_annoy::load_annoy_prebuilt<int, double, double, Annoy::Euclidean>(prefix);
+        return knncolle_annoy::load_annoy_prebuilt<int, double, double, Annoy::Euclidean>(dir);
     } else if (config.distance == "manhattan") {
-        return knncolle_annoy::load_annoy_prebuilt<int, double, double, Annoy::Manhattan>(prefix);
+        return knncolle_annoy::load_annoy_prebuilt<int, double, double, Annoy::Manhattan>(dir);
     } else {
-        const auto path = prefix + ".custom_distance";
+        const auto path = dir / "custom_distance";
         const auto msg = knncolle::quick_load_as_string(path);
         if (msg != "hi this is a custom distance") {
             throw std::runtime_error("unknown custom distance");
         }
-        return knncolle_annoy::load_annoy_prebuilt<int, double, double, MyCustomDistance>(prefix);
+        return knncolle_annoy::load_annoy_prebuilt<int, double, double, MyCustomDistance>(dir);
     }
 };
 
-std::string custom_prefix = "annoy/location/custom_";
+std::filesystem::path custom_dir = "annoy/location/custom";
 knncolle_annoy::AnnoyBuilder<int, double, double, MyCustomDistance> custom_builder;
 auto custom_index = custom_builder.build_unique(mat);
-custom_index.save(custom_prefix);
-auto custom_reloaded = knncolle::load_prebuilt(custom_prefix);
+custom_index.save(custom_dir);
+auto custom_reloaded = knncolle::load_prebuilt_unique(custom_dir);
 ```
 
 ## Building projects 
