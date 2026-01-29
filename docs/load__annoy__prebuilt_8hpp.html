@@ -105,6 +105,7 @@ $(function(){ initResizable(false); });
 <code>#include &lt;cstddef&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
+<code>#include &lt;filesystem&gt;</code><br />
 <code>#include &quot;<a class="elRef" href="https://knncolle.github.io/knncolle/knncolle_8hpp.html">knncolle/knncolle.hpp</a>&quot;</code><br />
 </div>
 <p><a href="load__annoy__prebuilt_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -123,11 +124,11 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a57a33c712b732200c7b46d36f13bfb78" id="r_a57a33c712b732200c7b46d36f13bfb78"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structknncolle__annoy_1_1AnnoyPrebuiltTypes.html">AnnoyPrebuiltTypes</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceknncolle__annoy.html#a57a33c712b732200c7b46d36f13bfb78">knncolle_annoy::load_annoy_prebuilt_types</a> (const std::string &amp;prefix)</td></tr>
-<tr class="separator:a57a33c712b732200c7b46d36f13bfb78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a480d8350b6c83729f140253ee3ca64cb" id="r_a480d8350b6c83729f140253ee3ca64cb"><td class="memTemplParams" colspan="2">template&lt;typename Index_ , typename Data_ , typename Distance_ , class AnnoyDistance_ , typename AnnoyIndex_  = Index_, typename AnnoyData_  = float, class AnnoyRng_  = Annoy::Kiss64Random, class AnnoyThreadPolicy_  = Annoy::AnnoyIndexSingleThreadedBuildPolicy&gt; </td></tr>
-<tr class="memitem:a480d8350b6c83729f140253ee3ca64cb"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceknncolle__annoy.html#a480d8350b6c83729f140253ee3ca64cb">knncolle_annoy::load_annoy_prebuilt</a> (const std::string &amp;prefix)</td></tr>
-<tr class="separator:a480d8350b6c83729f140253ee3ca64cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9eff16d6db0a482607ada4d00b00c3d1" id="r_a9eff16d6db0a482607ada4d00b00c3d1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structknncolle__annoy_1_1AnnoyPrebuiltTypes.html">AnnoyPrebuiltTypes</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceknncolle__annoy.html#a9eff16d6db0a482607ada4d00b00c3d1">knncolle_annoy::load_annoy_prebuilt_types</a> (const std::filesystem::path &amp;dir)</td></tr>
+<tr class="separator:a9eff16d6db0a482607ada4d00b00c3d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7869865e7f1417bd6fdcad52a7a66303" id="r_a7869865e7f1417bd6fdcad52a7a66303"><td class="memTemplParams" colspan="2">template&lt;typename Index_ , typename Data_ , typename Distance_ , class AnnoyDistance_ , typename AnnoyIndex_  = Index_, typename AnnoyData_  = float, class AnnoyRng_  = Annoy::Kiss64Random, class AnnoyThreadPolicy_  = Annoy::AnnoyIndexSingleThreadedBuildPolicy&gt; </td></tr>
+<tr class="memitem:a7869865e7f1417bd6fdcad52a7a66303"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceknncolle__annoy.html#a7869865e7f1417bd6fdcad52a7a66303">knncolle_annoy::load_annoy_prebuilt</a> (const std::filesystem::path &amp;dir)</td></tr>
+<tr class="separator:a7869865e7f1417bd6fdcad52a7a66303"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Load a prebuilt Annoy index. </p>

@@ -131,15 +131,15 @@
       <type>AnnoyPrebuiltTypes</type>
       <name>load_annoy_prebuilt_types</name>
       <anchorfile>namespaceknncolle__annoy.html</anchorfile>
-      <anchor>a57a33c712b732200c7b46d36f13bfb78</anchor>
-      <arglist>(const std::string &amp;prefix)</arglist>
+      <anchor>a9eff16d6db0a482607ada4d00b00c3d1</anchor>
+      <arglist>(const std::filesystem::path &amp;dir)</arglist>
     </member>
     <member kind="function">
       <type>auto</type>
       <name>load_annoy_prebuilt</name>
       <anchorfile>namespaceknncolle__annoy.html</anchorfile>
-      <anchor>a480d8350b6c83729f140253ee3ca64cb</anchor>
-      <arglist>(const std::string &amp;prefix)</arglist>
+      <anchor>a7869865e7f1417bd6fdcad52a7a66303</anchor>
+      <arglist>(const std::filesystem::path &amp;dir)</arglist>
     </member>
     <member kind="function">
       <type>const char *</type>
@@ -149,24 +149,24 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>std::function&lt; void(const std::string &amp;)&gt; &amp;</type>
+      <type>std::function&lt; void(const std::filesystem::path &amp;)&gt; &amp;</type>
       <name>custom_save_for_annoy_index</name>
       <anchorfile>namespaceknncolle__annoy.html</anchorfile>
-      <anchor>a006988a9f533b84711821cd524a80db9</anchor>
+      <anchor>a8525f55e793e3e117e404d324b519799</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>std::function&lt; void(const std::string &amp;)&gt; &amp;</type>
+      <type>std::function&lt; void(const std::filesystem::path &amp;)&gt; &amp;</type>
       <name>custom_save_for_annoy_data</name>
       <anchorfile>namespaceknncolle__annoy.html</anchorfile>
-      <anchor>acf44a3fe6882f4a5acba1a78353812cd</anchor>
+      <anchor>a8c1f7d1200d1be4a1a3403bd9a0f91e1</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>std::function&lt; void(const std::string &amp;)&gt; &amp;</type>
+      <type>std::function&lt; void(const std::filesystem::path &amp;)&gt; &amp;</type>
       <name>custom_save_for_annoy_distance</name>
       <anchorfile>namespaceknncolle__annoy.html</anchorfile>
-      <anchor>a7316f370cf35287d8f26edebe02df4ed</anchor>
+      <anchor>afbfa92fc904c2ed19bb8f51b50403881</anchor>
       <arglist>()</arglist>
     </member>
   </compound>

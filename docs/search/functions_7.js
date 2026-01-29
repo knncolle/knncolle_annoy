@@ -2,14 +2,14 @@ var searchData=
 [
   ['l2normalizedbuilder_0',['L2NormalizedBuilder',['https://knncolle.github.io/knncolle/classknncolle_1_1L2NormalizedBuilder.html#a387250ea0ae7654b186545814cd51da3',1,'knncolle::L2NormalizedBuilder']]],
   ['limit_1',['limit',['https://knncolle.github.io/knncolle/classknncolle_1_1NeighborQueue.html#ade4febddacc0e5725caa3c683486dcb0',1,'knncolle::NeighborQueue']]],
-  ['load_5fannoy_5fprebuilt_2',['load_annoy_prebuilt',['../namespaceknncolle__annoy.html#a480d8350b6c83729f140253ee3ca64cb',1,'knncolle_annoy']]],
-  ['load_5fannoy_5fprebuilt_5ftypes_3',['load_annoy_prebuilt_types',['../namespaceknncolle__annoy.html#a57a33c712b732200c7b46d36f13bfb78',1,'knncolle_annoy']]],
-  ['load_5fdistance_5fmetric_5fraw_4',['load_distance_metric_raw',['https://knncolle.github.io/knncolle/namespaceknncolle.html#a5c0df62bd7206b0b3892aedadb2a962c',1,'knncolle']]],
+  ['load_5fannoy_5fprebuilt_2',['load_annoy_prebuilt',['../namespaceknncolle__annoy.html#a7869865e7f1417bd6fdcad52a7a66303',1,'knncolle_annoy']]],
+  ['load_5fannoy_5fprebuilt_5ftypes_3',['load_annoy_prebuilt_types',['../namespaceknncolle__annoy.html#a9eff16d6db0a482607ada4d00b00c3d1',1,'knncolle_annoy']]],
+  ['load_5fdistance_5fmetric_5fraw_4',['load_distance_metric_raw',['https://knncolle.github.io/knncolle/namespaceknncolle.html#acd94b11fc8a2fade908a509ed2ecfddb',1,'knncolle']]],
   ['load_5fdistance_5fmetric_5fregistry_5',['load_distance_metric_registry',['https://knncolle.github.io/knncolle/namespaceknncolle.html#ad4af1d9292bd24d4bd3f72f4f99d9cbc',1,'knncolle']]],
-  ['load_5fl2normalized_5fprebuilt_6',['load_l2normalized_prebuilt',['https://knncolle.github.io/knncolle/namespaceknncolle.html#a4ac0563a38deda032558537ac3f2d304',1,'knncolle']]],
-  ['load_5fl2normalized_5fprebuilt_5ftypes_7',['load_l2normalized_prebuilt_types',['https://knncolle.github.io/knncolle/namespaceknncolle.html#acde4204d68e33d9c9689528da1d9ae4c',1,'knncolle']]],
-  ['load_5fprebuilt_5fraw_8',['load_prebuilt_raw',['https://knncolle.github.io/knncolle/namespaceknncolle.html#af261ec286ec7a275c3926ba0fdb8dc11',1,'knncolle']]],
+  ['load_5fl2normalized_5fprebuilt_6',['load_l2normalized_prebuilt',['https://knncolle.github.io/knncolle/namespaceknncolle.html#a54a79aea2d2c0a9ece9e107c60776c22',1,'knncolle']]],
+  ['load_5fl2normalized_5fprebuilt_5ftypes_7',['load_l2normalized_prebuilt_types',['https://knncolle.github.io/knncolle/namespaceknncolle.html#a7226ddc157c8e3c39d89b13bb412dda4',1,'knncolle']]],
+  ['load_5fprebuilt_5fraw_8',['load_prebuilt_raw',['https://knncolle.github.io/knncolle/namespaceknncolle.html#a2157dec9e895be903278fc6903c793e0',1,'knncolle']]],
   ['load_5fprebuilt_5fregistry_9',['load_prebuilt_registry',['https://knncolle.github.io/knncolle/namespaceknncolle.html#aa08de1eb1a23d5e13dc11e23ad7967ea',1,'knncolle']]],
-  ['load_5fprebuilt_5fshared_10',['load_prebuilt_shared',['https://knncolle.github.io/knncolle/namespaceknncolle.html#ae60afb430cc5948b0c8e5c2d4a4a7f84',1,'knncolle']]],
-  ['load_5fprebuilt_5funique_11',['load_prebuilt_unique',['https://knncolle.github.io/knncolle/namespaceknncolle.html#aa985f74dca21f1c23cfe914a25b2a412',1,'knncolle']]]
+  ['load_5fprebuilt_5fshared_10',['load_prebuilt_shared',['https://knncolle.github.io/knncolle/namespaceknncolle.html#a0958bf13fd4ad18e0fa0d35d9bd47665',1,'knncolle']]],
+  ['load_5fprebuilt_5funique_11',['load_prebuilt_unique',['https://knncolle.github.io/knncolle/namespaceknncolle.html#a9cb4f999cb4b25dd5bd4595bfb680f10',1,'knncolle']]]
 ];
