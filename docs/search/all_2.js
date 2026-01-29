@@ -9,5 +9,6 @@ var searchData=
   ['custom_5fsave_5ffor_5fannoy_5fdata_6',['custom_save_for_annoy_data',['../namespaceknncolle__annoy.html#acf44a3fe6882f4a5acba1a78353812cd',1,'knncolle_annoy']]],
   ['custom_5fsave_5ffor_5fannoy_5fdistance_7',['custom_save_for_annoy_distance',['../namespaceknncolle__annoy.html#a7316f370cf35287d8f26edebe02df4ed',1,'knncolle_annoy']]],
   ['custom_5fsave_5ffor_5fannoy_5findex_8',['custom_save_for_annoy_index',['../namespaceknncolle__annoy.html#a006988a9f533b84711821cd524a80db9',1,'knncolle_annoy']]],
-  ['customizing_20the_20search_9',['Customizing the search',['../index.html#autotoc_md3',1,'']]]
+  ['custom_5fsave_5ffor_5fl2normalized_5fnormalized_9',['custom_save_for_l2normalized_normalized',['https://knncolle.github.io/knncolle/namespaceknncolle.html#acb93f1814ffa0816dfbabc41bc3d5be7',1,'knncolle']]],
+  ['customizing_20the_20search_10',['Customizing the search',['../index.html#autotoc_md3',1,'']]]
 ];

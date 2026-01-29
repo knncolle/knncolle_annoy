@@ -107,65 +107,63 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceknncolle__annoy.html">knncolle_annoy</a> {</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* save_name = <span class="stringliteral">&quot;knncolle_annoy::Annoy&quot;</span>;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Input_&gt;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">using </span>I = std::remove_cv_t&lt;std::remove_reference_t&lt;Input_&gt; &gt;;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Input_&gt;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">using </span>I = std::remove_cv_t&lt;std::remove_reference_t&lt;Input_&gt; &gt;;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">// Doing some SFINAE nonsense.</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> AnnoyDistance_, <span class="keyword">typename</span> Other_ = <span class="keywordtype">int</span>&gt; </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">struct </span>has_name {</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> value = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>};</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">// Doing some SFINAE nonsense.</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> AnnoyDistance_, <span class="keyword">typename</span> Other_ = <span class="keywordtype">int</span>&gt; </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">struct </span>has_name {</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> value = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>};</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> AnnoyDistance_&gt; </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">struct </span>has_name&lt;AnnoyDistance_, decltype(AnnoyDistance_::name(), 0)&gt; {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> value = std::is_same&lt;<span class="keyword">decltype</span>(AnnoyDistance_::name()), <span class="keyword">const</span> <span class="keywordtype">char</span>*&gt;::value;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>};</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> AnnoyDistance_&gt; </div>
-<div class="foldopen" id="foldopen00054" data-start="{" data-end="}">
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="namespaceknncolle__annoy.html#a0f46fd7ab22d7976baec00c98c038bea">   54</a></span><span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_function" href="namespaceknncolle__annoy.html#a0f46fd7ab22d7976baec00c98c038bea">get_distance_name</a>() { </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(!has_name&lt;AnnoyDistance_&gt;::value) {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keywordflow">return</span> <span class="stringliteral">&quot;unknown&quot;</span>;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keywordflow">return</span> AnnoyDistance_::name();</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    }</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>}</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> AnnoyDistance_&gt; </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">struct </span>has_name&lt;AnnoyDistance_, decltype(AnnoyDistance_::name(), 0)&gt; {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> value = std::is_same&lt;<span class="keyword">decltype</span>(AnnoyDistance_::name()), <span class="keyword">const</span> <span class="keywordtype">char</span>*&gt;::value;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>};</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> AnnoyDistance_&gt; </div>
+<div class="foldopen" id="foldopen00048" data-start="{" data-end="}">
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="namespaceknncolle__annoy.html#a0f46fd7ab22d7976baec00c98c038bea">   48</a></span><span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_function" href="namespaceknncolle__annoy.html#a0f46fd7ab22d7976baec00c98c038bea">get_distance_name</a>() { </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(!has_name&lt;AnnoyDistance_&gt;::value) {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keywordflow">return</span> <span class="stringliteral">&quot;unknown&quot;</span>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keywordflow">return</span> AnnoyDistance_::name();</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>}</div>
 </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> AnnoyIndex_&gt;</div>
-<div class="foldopen" id="foldopen00078" data-start="{" data-end="}">
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="namespaceknncolle__annoy.html#a006988a9f533b84711821cd524a80db9">   78</a></span>std::function&lt;void(<span class="keyword">const</span> std::string&amp;)&gt;&amp; <a class="code hl_function" href="namespaceknncolle__annoy.html#a006988a9f533b84711821cd524a80db9">custom_save_for_annoy_index</a>() {</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keyword">static</span> std::function&lt;void(<span class="keyword">const</span> std::string&amp;)&gt; fun;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordflow">return</span> fun;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>}</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> AnnoyIndex_&gt;</div>
+<div class="foldopen" id="foldopen00072" data-start="{" data-end="}">
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="namespaceknncolle__annoy.html#a006988a9f533b84711821cd524a80db9">   72</a></span>std::function&lt;void(<span class="keyword">const</span> std::string&amp;)&gt;&amp; <a class="code hl_function" href="namespaceknncolle__annoy.html#a006988a9f533b84711821cd524a80db9">custom_save_for_annoy_index</a>() {</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keyword">static</span> std::function&lt;void(<span class="keyword">const</span> std::string&amp;)&gt; fun;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordflow">return</span> fun;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>}</div>
 </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> AnnoyData_&gt;</div>
-<div class="foldopen" id="foldopen00099" data-start="{" data-end="}">
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="namespaceknncolle__annoy.html#acf44a3fe6882f4a5acba1a78353812cd">   99</a></span>std::function&lt;void(<span class="keyword">const</span> std::string&amp;)&gt;&amp; <a class="code hl_function" href="namespaceknncolle__annoy.html#acf44a3fe6882f4a5acba1a78353812cd">custom_save_for_annoy_data</a>() {</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keyword">static</span> std::function&lt;void(<span class="keyword">const</span> std::string&amp;)&gt; fun;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keywordflow">return</span> fun;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>}</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> AnnoyData_&gt;</div>
+<div class="foldopen" id="foldopen00093" data-start="{" data-end="}">
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno"><a class="line" href="namespaceknncolle__annoy.html#acf44a3fe6882f4a5acba1a78353812cd">   93</a></span>std::function&lt;void(<span class="keyword">const</span> std::string&amp;)&gt;&amp; <a class="code hl_function" href="namespaceknncolle__annoy.html#acf44a3fe6882f4a5acba1a78353812cd">custom_save_for_annoy_data</a>() {</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keyword">static</span> std::function&lt;void(<span class="keyword">const</span> std::string&amp;)&gt; fun;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordflow">return</span> fun;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>}</div>
 </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> AnnoyDistance_&gt;</div>
-<div class="foldopen" id="foldopen00120" data-start="{" data-end="}">
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="namespaceknncolle__annoy.html#a7316f370cf35287d8f26edebe02df4ed">  120</a></span>std::function&lt;void(<span class="keyword">const</span> std::string&amp;)&gt;&amp; <a class="code hl_function" href="namespaceknncolle__annoy.html#a7316f370cf35287d8f26edebe02df4ed">custom_save_for_annoy_distance</a>() {</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">static</span> std::function&lt;void(<span class="keyword">const</span> std::string&amp;)&gt; fun;</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keywordflow">return</span> fun;</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>}</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> AnnoyDistance_&gt;</div>
+<div class="foldopen" id="foldopen00114" data-start="{" data-end="}">
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="namespaceknncolle__annoy.html#a7316f370cf35287d8f26edebe02df4ed">  114</a></span>std::function&lt;void(<span class="keyword">const</span> std::string&amp;)&gt;&amp; <a class="code hl_function" href="namespaceknncolle__annoy.html#a7316f370cf35287d8f26edebe02df4ed">custom_save_for_annoy_distance</a>() {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keyword">static</span> std::function&lt;void(<span class="keyword">const</span> std::string&amp;)&gt; fun;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keywordflow">return</span> fun;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>}</div>
 </div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>}</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>}</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aknncolle_8hpp_html"><div class="ttname"><a href="https://knncolle.github.io/knncolle/knncolle_8hpp.html">knncolle.hpp</a></div></div>
 <div class="ttc" id="anamespaceknncolle__annoy_html"><div class="ttname"><a href="namespaceknncolle__annoy.html">knncolle_annoy</a></div><div class="ttdoc">Approximate nearest neighbor search with Annoy.</div><div class="ttdef"><b>Definition</b> Annoy.hpp:23</div></div>
-<div class="ttc" id="anamespaceknncolle__annoy_html_a006988a9f533b84711821cd524a80db9"><div class="ttname"><a href="namespaceknncolle__annoy.html#a006988a9f533b84711821cd524a80db9">knncolle_annoy::custom_save_for_annoy_index</a></div><div class="ttdeci">std::function&lt; void(const std::string &amp;)&gt; &amp; custom_save_for_annoy_index()</div><div class="ttdef"><b>Definition</b> utils.hpp:78</div></div>
-<div class="ttc" id="anamespaceknncolle__annoy_html_a0f46fd7ab22d7976baec00c98c038bea"><div class="ttname"><a href="namespaceknncolle__annoy.html#a0f46fd7ab22d7976baec00c98c038bea">knncolle_annoy::get_distance_name</a></div><div class="ttdeci">const char * get_distance_name()</div><div class="ttdef"><b>Definition</b> utils.hpp:54</div></div>
-<div class="ttc" id="anamespaceknncolle__annoy_html_a7316f370cf35287d8f26edebe02df4ed"><div class="ttname"><a href="namespaceknncolle__annoy.html#a7316f370cf35287d8f26edebe02df4ed">knncolle_annoy::custom_save_for_annoy_distance</a></div><div class="ttdeci">std::function&lt; void(const std::string &amp;)&gt; &amp; custom_save_for_annoy_distance()</div><div class="ttdef"><b>Definition</b> utils.hpp:120</div></div>
-<div class="ttc" id="anamespaceknncolle__annoy_html_acf44a3fe6882f4a5acba1a78353812cd"><div class="ttname"><a href="namespaceknncolle__annoy.html#acf44a3fe6882f4a5acba1a78353812cd">knncolle_annoy::custom_save_for_annoy_data</a></div><div class="ttdeci">std::function&lt; void(const std::string &amp;)&gt; &amp; custom_save_for_annoy_data()</div><div class="ttdef"><b>Definition</b> utils.hpp:99</div></div>
+<div class="ttc" id="anamespaceknncolle__annoy_html_a006988a9f533b84711821cd524a80db9"><div class="ttname"><a href="namespaceknncolle__annoy.html#a006988a9f533b84711821cd524a80db9">knncolle_annoy::custom_save_for_annoy_index</a></div><div class="ttdeci">std::function&lt; void(const std::string &amp;)&gt; &amp; custom_save_for_annoy_index()</div><div class="ttdef"><b>Definition</b> utils.hpp:72</div></div>
+<div class="ttc" id="anamespaceknncolle__annoy_html_a0f46fd7ab22d7976baec00c98c038bea"><div class="ttname"><a href="namespaceknncolle__annoy.html#a0f46fd7ab22d7976baec00c98c038bea">knncolle_annoy::get_distance_name</a></div><div class="ttdeci">const char * get_distance_name()</div><div class="ttdef"><b>Definition</b> utils.hpp:48</div></div>
+<div class="ttc" id="anamespaceknncolle__annoy_html_a7316f370cf35287d8f26edebe02df4ed"><div class="ttname"><a href="namespaceknncolle__annoy.html#a7316f370cf35287d8f26edebe02df4ed">knncolle_annoy::custom_save_for_annoy_distance</a></div><div class="ttdeci">std::function&lt; void(const std::string &amp;)&gt; &amp; custom_save_for_annoy_distance()</div><div class="ttdef"><b>Definition</b> utils.hpp:114</div></div>
+<div class="ttc" id="anamespaceknncolle__annoy_html_acf44a3fe6882f4a5acba1a78353812cd"><div class="ttname"><a href="namespaceknncolle__annoy.html#acf44a3fe6882f4a5acba1a78353812cd">knncolle_annoy::custom_save_for_annoy_data</a></div><div class="ttdeci">std::function&lt; void(const std::string &amp;)&gt; &amp; custom_save_for_annoy_data()</div><div class="ttdef"><b>Definition</b> utils.hpp:93</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
