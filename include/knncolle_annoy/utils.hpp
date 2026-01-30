@@ -42,7 +42,7 @@ struct has_name<AnnoyDistance_, decltype(AnnoyDistance_::name(), 0)> {
  * @return Name of the distance metric, e.g., `"euclidean"`, `"manhattan"`.
  * This is taken from `AnnoyDistance_::name()` if such a method exists, otherwise `"unknown"` is returned.
  *
- * For unknown distances, consider using `customize_save_for_annoy_types()` to add more information to the on-disk representation during a `knncolle::Prebuilt::save()` call.
+ * For unknown distances, consider using `custom_save_for_annoy_distance()` to add more information to the on-disk representation during a `knncolle::Prebuilt::save()` call.
  */
 template<typename AnnoyDistance_> 
 const char* get_distance_name() { 
