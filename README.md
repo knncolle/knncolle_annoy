@@ -101,7 +101,7 @@ though more combinations could also be supported at the cost of larger binaries 
 
 ```cpp
 auto& reg = knncolle::load_prebuilt_registry<int, double, double>();
-reg[knncolle_annoy::save_name] = [](const std::filesystem::path& dir) -> Prebuilt<int, double, double>* {
+reg[knncolle_annoy::annoy_prebuilt_save_name] = [](const std::filesystem::path& dir) -> knncolle::Prebuilt<int, double, double>* {
     auto config = knncolle_annoy::load_annoy_prebuilt_types(dir);
 
     // Checks that the AnnoyIndex_ and AnnoyData_ types are the same as the defaults.
@@ -121,7 +121,7 @@ reg[knncolle_annoy::save_name] = [](const std::filesystem::path& dir) -> Prebuil
 };
 ```
 
-Then we can save and reload the `Prebuilt` Annoy indices.
+Then we can save and reload the `knncolle::Prebuilt` Annoy indices.
 Note the caveats on `knncolle::Prebuilt::save()` -
 specifically, the files are not guaranteed to be portable between machines or even different versions of **knncolle_annoy**.
 
@@ -147,7 +147,7 @@ knncolle_annoy::custom_save_for_annoy_data<MyCustomDistance>() = [](const std::f
 };
 
 // Make a new loading function that uses the saved custom information. 
-reg[knncolle_annoy::save_name] = [](const std::filesystem::path& dir) -> Prebuilt<int, double, double>* {
+reg[knncolle_annoy::annoy_prebuilt_save_name] = [](const std::filesystem::path& dir) -> knncolle::Prebuilt<int, double, double>* {
     auto config = knncolle_annoy::load_annoy_prebuilt_types(dir);
     if (config.index != knncolle::get_numeric_type<int>()) {
         throw std::runtime_error("unexpected type for the Annoy index");

@@ -65,7 +65,7 @@ inline AnnoyPrebuiltTypes load_annoy_prebuilt_types(const std::filesystem::path&
  * To load an Annoy index from disk, users are expected to define and register an Annoy-specific `knncolle::LoadPrebuiltFunction`.
  * In this function, users should call `load_annoy_prebuilt_types()` to figure out the saved index's `AnnoyDistance_`, `AnnoyIndex` and `AnnoyData_`.
  * Then, they should call `load_annoy_prebuilt()` with the appropriate types to return a pointer to a `knncolle::Prebuilt` object.
- * This user-defined function should be registered in `load_prebuilt_registry()` with the key in `knncolle_annoy::save_name`.
+ * This user-defined function should be registered in `load_prebuilt_registry()` with the key in `knncolle_annoy::annoy_prebuilt_save_name`.
  * 
  * We do not define a default function for loading Annoy indices as there are too many possible combinations of types.
  * Instead, the user is responsible for deciding which combinations of types should be handled.
