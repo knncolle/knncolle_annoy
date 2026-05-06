@@ -7,6 +7,8 @@ var searchData=
   ['search_5fmult_4',['search_mult',['../structknncolle__annoy_1_1AnnoyOptions.html#a7e917640043724d3933318a4504e65a5',1,'knncolle_annoy::AnnoyOptions']]],
   ['searcher_5',['Searcher',['https://knncolle.github.io/knncolle/classknncolle_1_1Searcher.html',1,'knncolle']]],
   ['searcher_2ehpp_6',['Searcher.hpp',['https://knncolle.github.io/knncolle/Searcher_8hpp.html',1,'']]],
-  ['simplematrix_7',['SimpleMatrix',['https://knncolle.github.io/knncolle/classknncolle_1_1SimpleMatrix.html',1,'knncolle::SimpleMatrix&lt; typename Index_, typename Data_ &gt;'],['https://knncolle.github.io/knncolle/classknncolle_1_1SimpleMatrix.html#afe415d2e6adc07aecffab4e8b75ca9e5',1,'knncolle::SimpleMatrix::SimpleMatrix()']]],
-  ['start_8',['Quick start',['../index.html#autotoc_md2',1,'']]]
+  ['seed_7',['seed',['https://knncolle.github.io/knncolle/structknncolle_1_1VptreeOptions.html#aa55f3dff5e333fe1d34dcfd98fe78aed',1,'knncolle::VptreeOptions']]],
+  ['simplematrix_8',['SimpleMatrix',['https://knncolle.github.io/knncolle/classknncolle_1_1SimpleMatrix.html',1,'knncolle::SimpleMatrix&lt; typename Index_, typename Data_ &gt;'],['https://knncolle.github.io/knncolle/classknncolle_1_1SimpleMatrix.html#afe415d2e6adc07aecffab4e8b75ca9e5',1,'knncolle::SimpleMatrix::SimpleMatrix()']]],
+  ['size_9',['size',['https://knncolle.github.io/knncolle/classknncolle_1_1NeighborQueue.html#a08ecb8b2fb208fba3213150b9a14f535',1,'knncolle::NeighborQueue']]],
+  ['start_10',['Quick start',['../index.html#autotoc_md2',1,'']]]
 ];
