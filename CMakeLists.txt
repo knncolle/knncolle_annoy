@@ -23,7 +23,7 @@ if(KNNCOLLE_ANNOY_FETCH_EXTERN)
     add_subdirectory(extern)
 else()
     find_package(knncolle_knncolle 3.1.0 CONFIG REQUIRED)
-    find_package(ltla_sanisizer 0.1.5 CONFIG REQUIRED)
+    find_package(ltla_sanisizer 0.2.0 CONFIG REQUIRED)
     find_package(Annoy CONFIG REQUIRED)
 endif()
 
